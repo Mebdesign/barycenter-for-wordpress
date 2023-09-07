@@ -1,0 +1,310 @@
+h1{
+    font-size: 2rem !important;
+    color:#222222 !important
+}
+
+h2 {
+    font-size: 1.5rem !important;
+    color:#555555 !important;
+}
+
+h1,h2,h3 {
+    font-family: 'Raleway', sans-serif !important;
+    font-weight: 800 !important;
+}
+
+p{
+    font-family: 'Open Sans', sans-serif;
+    font-size: 15px;
+}
+
+.grid{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#mapid {
+    height: 100vh;
+    width:65%;
+}
+
+.tonnage {
+    padding: 5px;
+    font-size: 16px;
+    border-width: 0px;
+    border-color: #CCCCCC;
+    background-color: #FFFFFF;
+    color: #000000;
+    border-style: solid;
+    border-radius: 3px;
+    box-shadow: 0px 0px 7px rgba(66,66,66,.2);
+}
+
+.hidden {
+    display:none;
+}
+
+.active {
+    display: block;
+}
+
+#result {
+    height:100vh;
+    width:35%;
+    overflow-y: auto;
+    box-sizing: content-box;
+}
+
+.copy{
+    text-align: right;
+    padding-right: 20px;
+}
+
+.card {
+    padding:20px;
+}
+
+.barycenter-button,
+.barycenter-button-primary,
+.barycenter-button-secondary {
+    display: inline-block;
+    text-decoration: none;
+    font-size: 13px;
+    line-height: 26px;
+    height: 28px;
+    margin: 0;
+    padding: 0 10px 1px;
+    cursor: pointer;
+    border-width: 1px;
+    border-style: solid;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    white-space: nowrap;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.barycenter-button,
+.barycenter-button-secondary {
+    color: #555;
+    border-color: #cccccc;
+    background: #f7f7f7;
+    -webkit-box-shadow: inset 0 1px 0 #fff, 0 1px 0 rgba(0,0,0,.08);
+    box-shadow: inset 0 1px 0 #fff, 0 1px 0 rgba(0,0,0,.08);
+    vertical-align: top;
+}
+
+p .barycenter-button {
+    vertical-align: baseline;
+}
+
+.barycenter-button:hover,
+.barycenter-button-secondary:hover,
+.barycenter-button:focus,
+.barycenter-button-secondary:focus {
+    background: #fafafa;
+    border-color: #999;
+    color: #222;
+}
+
+.barycenter-button:focus,
+.barycenter-button-secondary:focus {
+    -webkit-box-shadow: 1px 1px 1px rgba(0,0,0,.2);
+    box-shadow: 1px 1px 1px rgba(0,0,0,.2);
+}
+
+.barycenter-button:active,
+.barycenter-button-secondaryy:active {
+    background: #eee;
+    border-color: #999;
+    color: #333;
+    -webkit-box-shadow: inset 0 2px 5px -3px rgba( 0, 0, 0, 0.5 );
+    box-shadow: inset 0 2px 5px -3px rgba( 0, 0, 0, 0.5 );
+}
+
+.barycenter-button-primary {
+    background: #2ea2cc;
+    border-color: #0074a2;
+    -webkit-box-shadow: inset 0 1px 0 rgba(120,200,230,0.5), 0 1px 0 rgba(0,0,0,.15);
+    box-shadow: inset 0 1px 0 rgba(120,200,230,0.5), 0 1px 0 rgba(0,0,0,.15);
+    color: #fff;
+    text-decoration: none;
+}
+
+.barycenter-button-primary:hover,
+.barycenter-button-primary:focus {
+    background: #1e8cbe;
+    border-color: #0074a2;
+    -webkit-box-shadow: inset 0 1px 0 rgba(120,200,230,0.6);
+    box-shadow: inset 0 1px 0 rgba(120,200,230,0.6);
+    color: #fff;
+}
+
+.barycenter-button-primary:focus {
+    border-color: #0e3950;
+    -webkit-box-shadow: inset 0 1px 0 rgba(120,200,230,0.6), 1px 1px 2px rgba(0,0,0,0.4);
+    box-shadow: inset 0 1px 0 rgba(120,200,230,0.6), 1px 1px 2px rgba(0,0,0,0.4);
+}
+
+.barycenter-button-primary:active {
+    background: #1b7aa6;
+    border-color: #005684;
+    color: rgba(255,255,255,0.95);
+    -webkit-box-shadow: inset 0 1px 0 rgba(0,0,0,0.1);
+    box-shadow: inset 0 1px 0 rgba(0,0,0,0.1);
+    vertical-align: top;
+}
+
+
+table {
+    width: 100%;
+    display: block;
+}
+thead, tbody, th, td, tr {
+    display: block;
+}
+thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+}
+tr {
+    margin: 0 0 1rem 0;
+    padding: 10px;
+
+}
+tr:nth-child(odd) {
+    background: #eee;
+}
+td {
+    background: transparent;
+    position: relative;
+    text-align: left;
+    white-space: normal;
+    display: block;
+}
+td:before {
+
+    top: 0;
+    left: 0;
+    width: 50%;
+    padding-right: 10px;
+    white-space: nowrap;
+    content: attr(data-title);
+}
+
+/*
+Label the data
+*/
+td:nth-of-type(1):before { content: "Marker :"; }
+td:nth-of-type(2):before { content: "Latitude :"; }
+td:nth-of-type(3):before { content: "Longitude: "; }
+td:nth-of-type(4):before { content: "Contrainte (Volume) :"; }
+
+
+@media (max-width: 990px){
+    .grid{
+        display: block;
+    }
+
+    #mapid {
+        width:100%;
+        height: 60vh;
+    }
+
+    #result {
+        width:100%;
+    }
+}
+
+/*Modale*/
+
+/* Style pour le conteneur de la modale */
+.custom-modal {
+    margin-top: 0;
+    position: fixed;       /* Positionnement fixe par rapport à la fenêtre */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;        /* Assurez-vous que la modale est au-dessus des autres éléments */
+    background-color: rgba(0, 0, 0, 0.5); /* Fond semi-transparent pour la modale */
+    display: none;        /* Utilisation de Flexbox pour le centrage */
+    justify-content: center; /* Centrage horizontal du contenu */
+    align-items: center;  /* Centrage vertical du contenu */
+}
+
+/* Style pour le contenu de la modale */
+.modal-content {
+    position: relative;
+    width: 80%;           /* Largeur du contenu à 80% de la largeur de la fenêtre */
+    max-width: 600px;     /* Largeur maximale pour le contenu */
+    background-color: #fff; /* Couleur de fond blanche pour le contenu */
+    padding: 20px;        /* Espacement intérieur pour le contenu */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Ombre légère pour le contenu */
+}
+
+
+.close-modal {
+    position: absolute;
+    right:20px;
+    top:0;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Style pour le formulaire */
+#contactForm {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* Style pour les éléments de formulaire */
+#contactForm .form-check, #contactForm .form-group {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+/* Style pour les étiquettes */
+#contactForm label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Style pour les champs de saisie */
+#contactForm input[type="text"],
+#contactForm input[type="email"],
+#contactForm input[type="tel"] {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+/* Style pour les cases à cocher */
+#contactForm .form-check input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+/* Style pour les cases à cocher et leurs labels */
+#contactForm .form-check {
+    display: flex;        /* Utilisation de Flexbox pour l'alignement */
+    align-items: center;  /* Centrage vertical des éléments */
+    margin-bottom: 10px;  /* Espacement entre les cases à cocher */
+}
+
+#contactForm .form-check input[type="checkbox"] {
+    margin-right: 10px;   /* Espacement à droite de la case à cocher */
+}
