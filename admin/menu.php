@@ -22,6 +22,7 @@ function barycenter_settings_page() {
             <?php
             settings_fields('barycenter_options');
             do_settings_sections('barycenter_options');
+            barycenter_render_input_field('barycenter_limits', 'Limite de markers');
             barycenter_render_input_field('barycenter_latitude', 'Latitude');
             barycenter_render_input_field('barycenter_longitude', 'Longitude');
             barycenter_render_input_field('barycenter_zoom', 'Zoom');
@@ -98,7 +99,8 @@ function barycenter_enqueue_scripts() {
         'product_id' => get_option('barycenter_product_id'),
         'hasPurchased' => has_user_purchased_product(get_current_user_id(), get_option('barycenter_product_id')),
         'timer' => get_option('barycenter_timer_modale'),
-        'enable_timer' => get_option('barycenter_enable_timer') === 'on' ? true : false
+        'enable_timer' => get_option('barycenter_enable_timer') === 'on' ? true : false,
+        'limits' => get_option('barycenter_limits'),
     );
 
     wp_localize_script('barycenter-js', 'barycenterParams', $barycenter_params);
@@ -114,6 +116,7 @@ function barycenter_register_settings() {
     register_setting('barycenter_options', 'barycenter_product_id');
     register_setting('barycenter_options', 'barycenter_timer');
     register_setting('barycenter_options', 'barycenter_enable_timer');
+    register_setting('barycenter_options', 'barycenter_limits');
 
 }
 add_action('admin_init', 'barycenter_register_settings');

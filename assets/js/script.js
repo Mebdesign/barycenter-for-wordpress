@@ -60,8 +60,9 @@ class BarycenterCalculator {
                 return;
             }
 
-            if (!barycenterParams.hasPurchased && barycenterCalculator.markers.length >= 3) {
+            var limit = (typeof limitText !== 'undefined' && !isNaN(parseInt(limitText, 10))) ? parseInt(limitText, 10) : 3;
 
+            if (!barycenterParams.hasPurchased && barycenterCalculator.markers.length >= limit) {
                 alert("Vous avez atteint la limite de marqueurs pour la version gratuite. Veuillez acheter le produit pour ajouter plus de marqueurs.");
                 return;
 
@@ -76,7 +77,6 @@ class BarycenterCalculator {
                 this.addTableRow(marker);
 
                 const markerIndex = this.markers.indexOf(marker);
-                console.log("onMapClick Index : " + markerIndex)
             }
 
             // Affichage du tableau si c'est le premier marqueur ajouté
@@ -141,8 +141,6 @@ class BarycenterCalculator {
 
             // Suppression de la ligne correspondante dans le tableau des coordonnées
             jQuery('.coordinates tr').eq(markerIndex).remove();
-            console.log("OnPopUp Nombre : " + this.markers.length)
-            console.log("OnPopUp Index : " + markerIndex)
 
             // Mise à jour des marqueurs restants et du tableau
             this.updateMarkersAndTable();
