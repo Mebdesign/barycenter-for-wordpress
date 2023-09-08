@@ -56,7 +56,7 @@ class BarycenterCalculator {
 
             // Vérification de la validité des coordonnées
             if (isNaN(lat) || isNaN(lng)) {
-                console.error("Invalid coordinates:", lat, lng);
+                console.error("Invalid coordinates:", lat, lng); 
                 return;
             }
 
