@@ -22,9 +22,9 @@ function barycenter_settings_page() {
             <?php
             settings_fields('barycenter_options');
             do_settings_sections('barycenter_options');
+            barycenter_render_text_field('barycenter_longitude', 'Longitude');
+            barycenter_render_text_field('barycenter_latitude', 'Latitude');
             barycenter_render_input_field('barycenter_limits', 'Limite de markers');
-            barycenter_render_input_field('barycenter_latitude', 'Latitude');
-            barycenter_render_input_field('barycenter_longitude', 'Longitude');
             barycenter_render_input_field('barycenter_zoom', 'Zoom');
             barycenter_render_email_field('barycenter_email', 'E-mail');
             barycenter_render_text_field('barycenter_product_id', 'ID Product');
@@ -93,8 +93,8 @@ function barycenter_enqueue_scripts() {
     wp_enqueue_script('barycenter-js', plugins_url('../assets/js/script.js', __FILE__), array('jquery', 'osm-map-js', 'osm-cluster-map-js'), '1.0', false);
 
     $barycenter_params = array(
-        'latitude' => get_option('barycenter_latitude'),
-        'longitude' => get_option('barycenter_longitude'),
+        'latitude' => (float) get_option('barycenter_latitude'),
+        'longitude' => (float) get_option('barycenter_longitude'),
         'zoom' => get_option('barycenter_zoom'),
         'product_id' => get_option('barycenter_product_id'),
         'hasPurchased' => has_user_purchased_product(get_current_user_id(), get_option('barycenter_product_id')),

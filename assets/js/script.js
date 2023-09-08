@@ -60,7 +60,7 @@ class BarycenterCalculator {
                 return;
             }
 
-            var limit = (typeof limitText !== 'undefined' && !isNaN(parseInt(limitText, 10))) ? parseInt(limitText, 10) : 3;
+            var limit = (typeof barycenterParams.limits !== 'undefined' && !isNaN(parseInt(barycenterParams.limits, 10))) ? parseInt(barycenterParams.limits, 10) : 3;
 
             if (!barycenterParams.hasPurchased && barycenterCalculator.markers.length >= limit) {
                 alert("Vous avez atteint la limite de marqueurs pour la version gratuite. Veuillez acheter le produit pour ajouter plus de marqueurs.");
@@ -310,10 +310,17 @@ jQuery(document).on('click', function(event) {
 jQuery(document).ready(function () {
     barycenterCalculator = new BarycenterCalculator();
 
-    barycenterCalculator.map = L.map('mapid').setView([
-        barycenterParams.latitude || 53,
-        barycenterParams.longitude || -3
-    ], barycenterParams.zoom || 6);
+    if (!barycenterParams.hasPurchased) { 
+
+        barycenterCalculator.map = L.map('mapid').setView([
+            barycenterParams.latitude || 53,
+            barycenterParams.longitude || -3
+        ], barycenterParams.zoom || 6);
+    } else {
+
+        barycenterCalculator.map = L.map('mapid').setView([53, -3], 6);        
+    }
+
 
     barycenterCalculator.initializeMap();
 
