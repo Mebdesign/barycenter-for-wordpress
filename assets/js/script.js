@@ -235,9 +235,11 @@ class BarycenterCalculator {
             jQuery('.active').after(commentResult);
         });
 
-        setTimeout(() => {
-            jQuery('#contactModal').css('display', 'flex');
-        }, 12000);
+        if (barycenterParams.enable_timer) {
+            setTimeout(() => {
+                jQuery('#contactModal').css('display', 'flex');
+            }, barycenterParams.timer || 12000);
+        }
     }
 
     // Méthode pour réinitialiser l'application

@@ -27,12 +27,29 @@ function barycenter_settings_page() {
             barycenter_render_input_field('barycenter_zoom', 'Zoom');
             barycenter_render_email_field('barycenter_email', 'E-mail');
             barycenter_render_text_field('barycenter_product_id', 'ID Product');
+            barycenter_render_checkbox_field('barycenter_enable_timer', 'Activer le timer pour le modal');
+            if(get_option('barycenter_enable_timer') === 'on'){
+                barycenter_render_text_field('barycenter_timer', 'Timer modale (en ms)');
+            }
             submit_button();
             ?>
         </form>
     </div>
     <?php
 }
+
+function barycenter_render_checkbox_field($field_name, $label) {
+    $field_value = esc_attr(get_option($field_name));
+    ?>
+    <table class="form-table">
+        <tr valign="top">
+            <th scope="row"><?php echo $label; ?></th>
+            <td><input type="checkbox" name="<?php echo $field_name; ?>" <?php checked($field_value, 'on'); ?> /></td>
+        </tr>
+    </table>
+    <?php
+}
+
 
 function barycenter_render_text_field($field_name, $label) {
     $field_value = esc_attr(get_option($field_name));
@@ -79,7 +96,9 @@ function barycenter_enqueue_scripts() {
         'longitude' => get_option('barycenter_longitude'),
         'zoom' => get_option('barycenter_zoom'),
         'product_id' => get_option('barycenter_product_id'),
-        'hasPurchased' => has_user_purchased_product(get_current_user_id(), get_option('barycenter_product_id'))
+        'hasPurchased' => has_user_purchased_product(get_current_user_id(), get_option('barycenter_product_id')),
+        'timer' => get_option('barycenter_timer_modale'),
+        'enable_timer' => get_option('barycenter_enable_timer') === 'on' ? true : false
     );
 
     wp_localize_script('barycenter-js', 'barycenterParams', $barycenter_params);
@@ -93,6 +112,8 @@ function barycenter_register_settings() {
     register_setting('barycenter_options', 'barycenter_zoom');
     register_setting('barycenter_options', 'barycenter_email');
     register_setting('barycenter_options', 'barycenter_product_id');
+    register_setting('barycenter_options', 'barycenter_timer');
+    register_setting('barycenter_options', 'barycenter_enable_timer');
 
 }
 add_action('admin_init', 'barycenter_register_settings');
