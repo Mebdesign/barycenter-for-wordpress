@@ -32,3 +32,11 @@ function enqueue_leaflet_pulse_icon() {
     wp_enqueue_script('leaflet-pulse-icon-js', plugins_url('assets/js/L.Icon.Pulse.js',__FILE__), array(), null, true);
 }
 add_action('wp_enqueue_scripts', 'enqueue_leaflet_pulse_icon');
+
+
+function enqueue_leaflet_geocoder() {
+    wp_enqueue_style('geocoder-css', "https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css");
+    wp_enqueue_script('geocoder-js', "https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js", array(), null, true);
+}
+add_action('wp_enqueue_scripts', 'enqueue_leaflet_geocoder');
+

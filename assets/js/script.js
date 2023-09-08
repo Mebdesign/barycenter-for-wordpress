@@ -305,9 +305,9 @@ jQuery(document).on('click', function(event) {
 });
 
 
-
 // Initialisation de l'application lorsque le document est prêt
 jQuery(document).ready(function () {
+    
     barycenterCalculator = new BarycenterCalculator();
 
     if (!barycenterParams.hasPurchased) { 
@@ -331,6 +331,29 @@ jQuery(document).ready(function () {
         const home = window.location.origin;
         location.replace(home);
     });
+    var geocoder = L.Control.geocoder({
+        geocoder: L.Control.Geocoder.nominatim(), // Utilisez Nominatim comme service de géocodage
+        defaultMarkGeocode: false
+    })
+    .on('markgeocode', function(e) {
+        var bbox = e.geocode.bbox;
+        var poly = L.polygon([
+             bbox.getSouthEast(),
+             bbox.getNorthEast(),
+             bbox.getNorthWest(),
+             bbox.getSouthWest()
+        ]);
+        barycenterCalculator.map.fitBounds(poly.getBounds());
+        
+        // Ajoutez un marqueur à l'emplacement recherché
+        const marker = barycenterCalculator.createMarker(e.geocode.center);
+        marker.addTo(barycenterCalculator.map).openPopup();
+        barycenterCalculator.markers.push(marker);
+        barycenterCalculator.addTableRow(marker);
+    })
+    .addTo(barycenterCalculator.map);
+    
+
 });
 
 // Écouteurs d'événements pour la modale et le formulaire de contact
