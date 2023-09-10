@@ -22,10 +22,10 @@ function barycenter_settings_page() {
             <?php
             settings_fields('barycenter_options');
             do_settings_sections('barycenter_options');
+            barycenter_render_input_field('barycenter_zoom', 'Zoom');
             barycenter_render_text_field('barycenter_longitude', 'Longitude');
             barycenter_render_text_field('barycenter_latitude', 'Latitude');
             barycenter_render_input_field('barycenter_limits', 'Limite de markers');
-            barycenter_render_input_field('barycenter_zoom', 'Zoom');
             barycenter_render_email_field('barycenter_email', 'E-mail');
             barycenter_render_text_field('barycenter_product_id', 'ID Product');
             barycenter_render_checkbox_field('barycenter_enable_timer', 'Activer le timer pour le modal');

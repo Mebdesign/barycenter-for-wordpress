@@ -56,7 +56,7 @@ class BarycenterCalculator {
 
             // Vérification de la validité des coordonnées
             if (isNaN(lat) || isNaN(lng)) {
-                console.error("Invalid coordinates:", lat, lng); 
+                console.error("Invalid coordinates:", lat, lng);
                 return;
             }
 
@@ -307,10 +307,10 @@ jQuery(document).on('click', function(event) {
 
 // Initialisation de l'application lorsque le document est prêt
 jQuery(document).ready(function () {
-    
+
     barycenterCalculator = new BarycenterCalculator();
 
-    if (!barycenterParams.hasPurchased) { 
+    if (barycenterParams.hasPurchased) {
 
         barycenterCalculator.map = L.map('mapid').setView([
             barycenterParams.latitude || 53,
@@ -318,7 +318,7 @@ jQuery(document).ready(function () {
         ], barycenterParams.zoom || 6);
     } else {
 
-        barycenterCalculator.map = L.map('mapid').setView([53, -3], 6);        
+        barycenterCalculator.map = L.map('mapid').setView([53, -3], 6);
     }
 
 
@@ -344,7 +344,7 @@ jQuery(document).ready(function () {
              bbox.getSouthWest()
         ]);
         barycenterCalculator.map.fitBounds(poly.getBounds());
-        
+
         // Ajoutez un marqueur à l'emplacement recherché
         const marker = barycenterCalculator.createMarker(e.geocode.center);
         marker.addTo(barycenterCalculator.map).openPopup();
@@ -352,7 +352,7 @@ jQuery(document).ready(function () {
         barycenterCalculator.addTableRow(marker);
     })
     .addTo(barycenterCalculator.map);
-    
+
 
 });
 
