@@ -8,6 +8,8 @@ class BarycenterCalculator {
         this.barycenterMarker = null; // Cercle représentant le barycentre
         // Définition de l'icône verte pour le marker
         let barycenterCalculator; // Déclaration globale
+        this.markerClusterGroup = null; // Groupe de clustering pour les marqueurs
+
 
     }
 
@@ -20,6 +22,13 @@ class BarycenterCalculator {
 
         // Écouteur d'événement pour détecter les clics sur la carte
         this.map.on('click', this.onMapClick.bind(this));
+
+        //initialiser le cluster
+        if(barycenterParams.enable_cluster) {
+            this.markerClusterGroup = L.markerClusterGroup();
+            this.map.addLayer(this.markerClusterGroup);
+        }
+
 
         // Ajustements CSS pour la mise en page responsive
         let gridElement = jQuery('.grid');
@@ -70,7 +79,12 @@ class BarycenterCalculator {
 
                 // Création d'un nouveau marqueur et ajout à la carte
                 const marker = this.createMarker(e.latlng);
-                marker.addTo(this.map).openPopup();  // Ouvre la popup du marker
+
+                if(barycenterParams.enable_cluster) {
+                    this.markerClusterGroup.addLayer(marker).openPopup();
+                } else {
+                    marker.addTo(this.map).openPopup();  // Ouvre la popup du marker
+                }
                 this.markers.push(marker);
 
                 // Ajout d'une nouvelle ligne au tableau des coordonnées
@@ -97,6 +111,10 @@ class BarycenterCalculator {
             riseOnHover: true,
             draggable: true
         });
+        if(barycenterParams.enable_cluster) {
+            // ajouter le marqueur au cluster plutôt qu'à la carte directement
+            this.markerClusterGroup.addLayer(marker);
+        }
 
         // Configuration de la popup du marqueur avec un bouton de suppression
         marker.bindPopup(`Marker: ${this.markers.length} <br><input type='button' value='Supprimer' class='marker-delete-button'/>`, {autoClose: false});
@@ -131,10 +149,15 @@ class BarycenterCalculator {
         // Détacher les événements précédents
         jQuery(document).off('click', '.marker-delete-button:visible');
 
+
         // Écouteur d'événement pour le bouton de suppression du marqueur
         jQuery(document).on('click', '.marker-delete-button:visible', () => {
             const markerIndex = this.markers.indexOf(tempMarker);
 
+            // supprimer le marqueur du cluster
+            if(barycenterParams.enable_cluster) {
+                this.markerClusterGroup.removeLayer(tempMarker);
+            }
             // Suppression du marqueur de la carte et du tableau des marqueurs
             this.map.removeLayer(tempMarker);
             this.markers.splice(markerIndex, 1);
@@ -240,8 +263,10 @@ class BarycenterCalculator {
         }
     }
 
+
     // Méthode pour réinitialiser l'application
     reset() {
+        this.markerClusterGroup.clearLayers();
         location.reload();
     }
 
