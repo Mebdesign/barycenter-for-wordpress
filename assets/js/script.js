@@ -266,7 +266,6 @@ class BarycenterCalculator {
 
     // Méthode pour réinitialiser l'application
     reset() {
-        this.markerClusterGroup.clearLayers();
         location.reload();
     }
 
