@@ -234,9 +234,10 @@ class BarycenterCalculator {
         });
 
         if (barycenterParams.enable_timer) {
+            console.log(barycenterParams.timer)
             setTimeout(() => {
                 jQuery('#contactModal').css('display', 'flex');
-            }, barycenterParams.timer || 12000);
+            }, barycenterParams.timer || 5000);
         }
     }
 

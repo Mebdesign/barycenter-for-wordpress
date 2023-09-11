@@ -98,7 +98,7 @@ function barycenter_enqueue_scripts() {
         'zoom' => get_option('barycenter_zoom'),
         'product_id' => get_option('barycenter_product_id'),
         'hasPurchased' => has_user_purchased_product(get_current_user_id(), get_option('barycenter_product_id')),
-        'timer' => get_option('barycenter_timer_modale'),
+        'timer' => get_option('barycenter_timer'),
         'enable_timer' => get_option('barycenter_enable_timer') === 'on' ? true : false,
         'limits' => get_option('barycenter_limits'),
     );
