@@ -357,10 +357,13 @@ jQuery(document).ready(function () {
 });
 
 // Écouteurs d'événements pour la modale et le formulaire de contact
-jQuery(document).on('click', '.close-modal, #contactModal', function() {
-    jQuery('#contactModal').css('display', 'none');
-
+jQuery(document).on('click', '.close-modal, #contactModal', function(event) {
+    // Si l'utilisateur a cliqué sur .close-modal ou en dehors de .modal-content
+    if (jQuery(event.target).hasClass('close-modal') || jQuery(event.target).closest('.modal-content').length === 0) {
+        jQuery('#contactModal').css('display', 'none');
+    }
 });
+
 
 jQuery(document).on('submit', '#contactForm', function(e) {
     e.preventDefault();
