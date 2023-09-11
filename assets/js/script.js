@@ -71,7 +71,7 @@ class BarycenterCalculator {
 
             var limit = (typeof barycenterParams.limits !== 'undefined' && !isNaN(parseInt(barycenterParams.limits, 10))) ? parseInt(barycenterParams.limits, 10) : 3;
 
-            if (!barycenterParams.hasPurchased && barycenterCalculator.markers.length >= limit) {
+            if (barycenterCalculator.markers.length >= limit) {
                 alert("Vous avez atteint la limite de marqueurs pour la version gratuite. Veuillez acheter le produit pour ajouter plus de marqueurs.");
                 return;
 
@@ -335,16 +335,10 @@ jQuery(document).ready(function () {
 
     barycenterCalculator = new BarycenterCalculator();
 
-    if (barycenterParams.hasPurchased) {
-
         barycenterCalculator.map = L.map('mapid').setView([
             barycenterParams.latitude || 53,
             barycenterParams.longitude || -3
         ], barycenterParams.zoom || 6);
-    } else {
-
-        barycenterCalculator.map = L.map('mapid').setView([53, -3], 6);
-    }
 
 
     barycenterCalculator.initializeMap();

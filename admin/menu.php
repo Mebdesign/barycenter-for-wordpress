@@ -27,7 +27,6 @@ function barycenter_settings_page() {
             barycenter_render_text_field('barycenter_latitude', 'Latitude');
             barycenter_render_input_field('barycenter_limits', 'Limite de markers');
             barycenter_render_email_field('barycenter_email', 'E-mail');
-            barycenter_render_text_field('barycenter_product_id', 'ID Product');
             barycenter_render_checkbox_field('barycenter_enable_cluster', 'Activer les clusters');
             barycenter_render_checkbox_field('barycenter_enable_timer', 'Activer le timer pour le modal');
             if(get_option('barycenter_enable_timer') === 'on'){
@@ -98,7 +97,6 @@ function barycenter_enqueue_scripts() {
         'longitude' => (float) get_option('barycenter_longitude'),
         'zoom' => get_option('barycenter_zoom'),
         'product_id' => get_option('barycenter_product_id'),
-        'hasPurchased' => has_user_purchased_product(get_current_user_id(), get_option('barycenter_product_id')),
         'timer' => get_option('barycenter_timer'),
         'enable_timer' => get_option('barycenter_enable_timer') === 'on' ? true : false,
         'enable_cluster' => get_option('barycenter_enable_cluster') === 'on' ? true : false,
@@ -115,7 +113,6 @@ function barycenter_register_settings() {
     register_setting('barycenter_options', 'barycenter_longitude');
     register_setting('barycenter_options', 'barycenter_zoom');
     register_setting('barycenter_options', 'barycenter_email');
-    register_setting('barycenter_options', 'barycenter_product_id');
     register_setting('barycenter_options', 'barycenter_timer');
     register_setting('barycenter_options', 'barycenter_enable_timer');
     register_setting('barycenter_options', 'barycenter_enable_cluster');
