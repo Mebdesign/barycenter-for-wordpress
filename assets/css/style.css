@@ -245,6 +245,10 @@ td:nth-of-type(4):before { content: "Contrainte (Volume) :"; }
     background-color: #fff; /* Couleur de fond blanche pour le contenu */
     padding: 20px;        /* Espacement intérieur pour le contenu */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Ombre légère pour le contenu */
+    max-height: 90vh; /* Hauteur maximale de 90% de la hauteur de la fenêtre */
+    overflow-y: auto; /* Permettre le défilement si le contenu est trop long */
+    transform: translateY(-50%); /* Centrage vertical */
+    top: 50%; /* Positionnement à 50% de la hauteur de la fenêtre */
 }
 
 
