@@ -28,7 +28,8 @@ function barycenter_settings_page() {
             barycenter_render_input_field('barycenter_limits', 'Limite de markers');
             barycenter_render_email_field('barycenter_email', 'E-mail');
             barycenter_render_checkbox_field('barycenter_enable_cluster', 'Activer les clusters');
-            barycenter_render_checkbox_field('barycenter_enable_timer', 'Activer le timer pour le modal');
+            barycenter_render_colors_field('barycenter_color', 'Couleur du marker en avant');
+            barycenter_render_checkbox_field('barycenter_enable_timer', 'Activer le timer pour la modale');
             if(get_option('barycenter_enable_timer') === 'on'){
                 barycenter_render_text_field('barycenter_timer', 'Timer modale (en ms)');
             }
@@ -38,6 +39,34 @@ function barycenter_settings_page() {
     </div>
     <?php
 }
+
+function barycenter_render_colors_field($selected_color, $label) {
+    $options = get_option('barycenter_color', array());
+
+    $selected_color = isset($options['color']) ? $options['color'] : '';
+
+    ?>
+    <table class="form-table">
+        <tr valign="top">
+            <th for="color" scope="row"><?php echo $label; ?></th>
+            <td>
+                <select id="color" name="barycenter_color[color]">
+                    <option value="blue" <?php selected($selected_color, 'blue'); ?>>Bleu</option>
+                    <option value="violet" <?php selected($selected_color, 'violet'); ?>>Violet</option>
+                    <option value="green" <?php selected($selected_color, 'green'); ?>>Vert</option>
+                    <option value="gold" <?php selected($selected_color, 'gold'); ?>>Or</option>
+                    <option value="black" <?php selected($selected_color, 'black'); ?>>Noir</option>
+                    <option value="grey" <?php selected($selected_color, 'grey'); ?>>Gris</option>
+                    <option value="red" <?php selected($selected_color, 'red'); ?>>Rouge</option>
+                    <option value="orange" <?php selected($selected_color, 'orange'); ?>>Orange</option>
+                    <option value="yellow" <?php selected($selected_color, 'yellow'); ?>>Jaune</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <?php
+}
+
 
 function barycenter_render_checkbox_field($field_name, $label) {
     $field_value = esc_attr(get_option($field_name));
@@ -101,6 +130,7 @@ function barycenter_enqueue_scripts() {
         'enable_timer' => get_option('barycenter_enable_timer') === 'on' ? true : false,
         'enable_cluster' => get_option('barycenter_enable_cluster') === 'on' ? true : false,
         'limits' => get_option('barycenter_limits'),
+        'option' =>  get_option('barycenter_color')
     );
 
     wp_localize_script('barycenter-js', 'barycenterParams', $barycenter_params);
@@ -117,6 +147,9 @@ function barycenter_register_settings() {
     register_setting('barycenter_options', 'barycenter_enable_timer');
     register_setting('barycenter_options', 'barycenter_enable_cluster');
     register_setting('barycenter_options', 'barycenter_limits');
+    register_setting('barycenter_options', 'barycenter_color');
 
 }
 add_action('admin_init', 'barycenter_register_settings');
+
+
