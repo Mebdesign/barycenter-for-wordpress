@@ -50,27 +50,3 @@ function process_contact_form() {
 // Ajoutez des actions AJAX pour les utilisateurs authentifiés et non authentifiés
 add_action('wp_ajax_process_contact_form', 'process_contact_form'); // Si l'utilisateur est connecté
 add_action('wp_ajax_nopriv_process_contact_form', 'process_contact_form'); // Si l'utilisateur n'est pas connecté
-
-// Vérifie si un utilisateur a acheté un produit spécifique
-function has_user_purchased_product($user_id, $product_id) {
-    // Récupère toutes les commandes de l'utilisateur
-    $customer_orders = get_posts([
-        'numberposts' => -1,
-        'meta_key'    => '_customer_user',
-        'meta_value'  => $user_id,
-        'post_type'   => 'shop_order',
-        'post_status' => array('wc-completed') // Seules les commandes terminées
-    ]);
-
-    foreach ($customer_orders as $order) {
-        $order_items = wc_get_order($order->ID)->get_items();
-
-        foreach ($order_items as $item) {
-            if ($item->get_product_id() == $product_id) {
-                return true; // Produit trouvé dans les commandes de l'utilisateur
-            }
-        }
-    }
-
-    return false; // Produit non trouvé dans les commandes de l'utilisateur
-}

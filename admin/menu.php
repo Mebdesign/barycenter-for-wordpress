@@ -22,6 +22,7 @@ function barycenter_settings_page() {
             <?php
             settings_fields('barycenter_options');
             do_settings_sections('barycenter_options');
+            barycenter_render_text_field('barycenter_product_id', 'ID Product');
             barycenter_render_input_field('barycenter_zoom', 'Zoom');
             barycenter_render_text_field('barycenter_longitude', 'Longitude');
             barycenter_render_text_field('barycenter_latitude', 'Latitude');
@@ -126,6 +127,8 @@ function barycenter_enqueue_scripts() {
         'longitude' => (float) get_option('barycenter_longitude'),
         'zoom' => get_option('barycenter_zoom'),
         'product_id' => get_option('barycenter_product_id'),
+        'hasPurchased' => has_user_purchased_product(get_current_user_id(), get_option('barycenter_product_id')),
+        'hasSubscribed' => has_active_subscription(get_current_user_id(), get_option('barycenter_product_id')),
         'timer' => get_option('barycenter_timer'),
         'enable_timer' => get_option('barycenter_enable_timer') === 'on' ? true : false,
         'enable_cluster' => get_option('barycenter_enable_cluster') === 'on' ? true : false,
@@ -143,6 +146,7 @@ function barycenter_register_settings() {
     register_setting('barycenter_options', 'barycenter_longitude');
     register_setting('barycenter_options', 'barycenter_zoom');
     register_setting('barycenter_options', 'barycenter_email');
+    register_setting('barycenter_options', 'barycenter_product_id');
     register_setting('barycenter_options', 'barycenter_timer');
     register_setting('barycenter_options', 'barycenter_enable_timer');
     register_setting('barycenter_options', 'barycenter_enable_cluster');
@@ -153,3 +157,38 @@ function barycenter_register_settings() {
 add_action('admin_init', 'barycenter_register_settings');
 
 
+// Vérifie si un utilisateur a acheté un produit spécifique
+function has_user_purchased_product($user_id, $product_id) {
+    // Récupère toutes les commandes de l'utilisateur
+    $customer_orders = get_posts([
+        'numberposts' => -1,
+        'meta_key'    => '_customer_user',
+        'meta_value'  => $user_id,
+        'post_type'   => 'shop_order',
+        'post_status' => array('wc-completed') // Seules les commandes terminées
+    ]);
+
+    foreach ($customer_orders as $order) {
+        $order_items = wc_get_order($order->ID)->get_items();
+
+        foreach ($order_items as $item) {
+            if ($item->get_product_id() == $product_id) {
+                return true; // Produit trouvé dans les commandes de l'utilisateur
+            }
+        }
+    }
+
+    return false; // Produit non trouvé dans les commandes de l'utilisateur
+}
+
+function has_active_subscription($user_id, $product_id) {
+    if (class_exists('WC_Subscriptions_Manager')) {
+        $active_subscriptions = WC_Subscriptions_Manager::get_users_subscriptions($user_id);
+        foreach ($active_subscriptions as $subscription) {
+            if ($subscription['product_id'] == $product_id && $subscription['status'] == 'active') {
+                return true;
+            }
+        }
+    }
+    return false;
+}
