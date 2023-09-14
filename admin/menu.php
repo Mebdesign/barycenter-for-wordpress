@@ -23,6 +23,7 @@ function barycenter_settings_page() {
             settings_fields('barycenter_options');
             do_settings_sections('barycenter_options');
             barycenter_render_text_field('barycenter_product_id', 'ID Product');
+            barycenter_render_text_field('barycenter_redirect_url', 'Url de redirection sans abonnemnt');
             barycenter_render_input_field('barycenter_zoom', 'Zoom');
             barycenter_render_text_field('barycenter_longitude', 'Longitude');
             barycenter_render_text_field('barycenter_latitude', 'Latitude');
@@ -127,8 +128,8 @@ function barycenter_enqueue_scripts() {
         'longitude' => (float) get_option('barycenter_longitude'),
         'zoom' => get_option('barycenter_zoom'),
         'product_id' => get_option('barycenter_product_id'),
+        'redirect_url' => get_option( 'barycenter_redirect_url'),
         'hasPurchased' => has_user_purchased_product(get_current_user_id(), get_option('barycenter_product_id')),
-        'hasSubscribed' => has_active_subscription(get_current_user_id(), get_option('barycenter_product_id')),
         'timer' => get_option('barycenter_timer'),
         'enable_timer' => get_option('barycenter_enable_timer') === 'on' ? true : false,
         'enable_cluster' => get_option('barycenter_enable_cluster') === 'on' ? true : false,
@@ -152,12 +153,13 @@ function barycenter_register_settings() {
     register_setting('barycenter_options', 'barycenter_enable_cluster');
     register_setting('barycenter_options', 'barycenter_limits');
     register_setting('barycenter_options', 'barycenter_color');
+    register_setting('barycenter_options', 'barycenter_redirect_url');
 
 }
 add_action('admin_init', 'barycenter_register_settings');
 
 
-// Vérifie si un utilisateur a acheté un produit spécifique
+// Vérifie si un utilisateur a commandé un produit spécifique
 function has_user_purchased_product($user_id, $product_id) {
     // Récupère toutes les commandes de l'utilisateur
     $customer_orders = get_posts([
@@ -181,14 +183,19 @@ function has_user_purchased_product($user_id, $product_id) {
     return false; // Produit non trouvé dans les commandes de l'utilisateur
 }
 
-function has_active_subscription($user_id, $product_id) {
-    if (class_exists('WC_Subscriptions_Manager')) {
-        $active_subscriptions = WC_Subscriptions_Manager::get_users_subscriptions($user_id);
-        foreach ($active_subscriptions as $subscription) {
-            if ($subscription['product_id'] == $product_id && $subscription['status'] == 'active') {
-                return true;
-            }
+function redirect_to_private_page() {
+    if (is_page('app-barycentre')) { // Remplacez 'nom-de-votre-page' par le slug de votre page privée
+        $user_id = get_current_user_id();
+        $product_id = get_option('barycenter_product_id'); // Remplacez par l'ID de votre produit d'abonnement
+        $redirect = get_option('barycenter_redirect_url');
+        error_log("User ID: " . $user_id);
+        error_log("Product ID: " . $product_id);
+        error_log("Has Purchased: " . var_export(has_user_purchased_product($user_id, $product_id), true));
+
+        if (!has_user_purchased_product($user_id, $product_id)) {
+            wp_redirect($redirect ? $redirect : home_url()); // Redirige vers la page d'accueil si l'utilisateur n'a pas d'abonnement actif
+            exit;
         }
     }
-    return false;
 }
+add_action('template_redirect', 'redirect_to_private_page');
