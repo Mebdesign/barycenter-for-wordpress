@@ -37,6 +37,9 @@ function barycenter_calculation_shortcode() {
             <a class="copy" target="_blank" href="https://www.mebdesign.fr">&copy; Mebdesign.fr</a>
         </div>
     </section>
+    <section class="subscribers">
+        
+    </section>
 
     <!-- Modal -->
     <div class="custom-modal" id="contactModal">

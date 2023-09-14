@@ -36,7 +36,6 @@ function process_contact_form() {
     $message = "Nom : $firstName $lastName\nEmail : $email\nTéléphone : $phone\nPermission de contact : $contactPermission\nSouhaite être recontacté : $wishContact";
     $headers = array('Content-Type: text/plain; charset=UTF-8');
 
-
     // Traitez les données comme vous le souhaitez (par exemple, enregistrez-les dans une base de données, envoyez un e-mail, etc.)
 
     // Envoyez une réponse
@@ -50,3 +49,4 @@ function process_contact_form() {
 // Ajoutez des actions AJAX pour les utilisateurs authentifiés et non authentifiés
 add_action('wp_ajax_process_contact_form', 'process_contact_form'); // Si l'utilisateur est connecté
 add_action('wp_ajax_nopriv_process_contact_form', 'process_contact_form'); // Si l'utilisateur n'est pas connecté
+

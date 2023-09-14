@@ -188,9 +188,6 @@ function redirect_to_private_page() {
         $user_id = get_current_user_id();
         $product_id = get_option('barycenter_product_id'); // Remplacez par l'ID de votre produit d'abonnement
         $redirect = get_option('barycenter_redirect_url');
-        error_log("User ID: " . $user_id);
-        error_log("Product ID: " . $product_id);
-        error_log("Has Purchased: " . var_export(has_user_purchased_product($user_id, $product_id), true));
 
         if (!has_user_purchased_product($user_id, $product_id)) {
             wp_redirect($redirect ? $redirect : home_url()); // Redirige vers la page d'accueil si l'utilisateur n'a pas d'abonnement actif
