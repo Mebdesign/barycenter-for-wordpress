@@ -159,38 +159,38 @@ p .barycenter-button {
 }
 
 
-.coordinates table {
+.active table {
     width: 100%;
     display: block;
 }
-.coordinates thead,
-.coordinates tbody,
-.coordinates th,
-.coordinates td,
-.coordinates tr {
+.active thead,
+.active tbody,
+.active th,
+.active td,
+.active tr {
     display: block;
 }
-.coordinates thead tr {
+.active thead tr {
     position: absolute;
     top: -9999px;
     left: -9999px;
 }
-.coordinates tr {
+.active tr {
     margin: 0 0 1rem 0;
     padding: 10px;
 
 }
-.coordinates tr:nth-child(odd) {
+.active tr:nth-child(odd) {
     background: #eee;
 }
-.coordinates td {
+.active td {
     background: transparent;
     position: relative;
     text-align: left;
     white-space: normal;
     display: block;
 }
-.coordinates td:before {
+.active td:before {
 
     top: 0;
     left: 0;
@@ -203,10 +203,10 @@ p .barycenter-button {
 /*
 Label the data
 */
-.coordinates td:nth-of-type(1):before { content: "Marker :"; }
-.coordinates .coordinates td:nth-of-type(2):before { content: "Latitude :"; }
+.active td:nth-of-type(1):before { content: "Marker :"; }
+.active td:nth-of-type(2):before { content: "Latitude :"; }
 td:nth-of-type(3):before { content: "Longitude: "; }
-.coordinates td:nth-of-type(4):before { content: "Contrainte (Volume) :"; }
+.active td:nth-of-type(4):before { content: "Contrainte (Volume) :"; }
 
 
 @media (max-width: 990px){
