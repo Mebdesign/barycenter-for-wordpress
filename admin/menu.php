@@ -222,9 +222,10 @@ add_filter('woocommerce_account_menu_items', 'add_barycenter_link_to_account_men
 
 
 function redirect_barycenter_menu_item() {
-    if (is_account_page() && isset($_GET['app-barycentre'])) {
+    if (function_exists('is_account_page') && is_account_page() && isset($_GET['app-barycentre'])) {
         wp_redirect(home_url('/app-barycentre/'));
         exit;
     }
 }
 add_action('template_redirect', 'redirect_barycenter_menu_item');
+
