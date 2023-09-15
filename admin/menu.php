@@ -23,7 +23,7 @@ function barycenter_settings_page() {
             settings_fields('barycenter_options');
             do_settings_sections('barycenter_options');
             barycenter_render_text_field('barycenter_product_id', 'ID Product');
-            barycenter_render_text_field('barycenter_redirect_url', 'Url de redirection sans abonnemnt');
+            barycenter_render_text_field('barycenter_redirect_url', 'Url de redirection sans abonnement');
             barycenter_render_input_field('barycenter_zoom', 'Zoom');
             barycenter_render_text_field('barycenter_longitude', 'Longitude');
             barycenter_render_text_field('barycenter_latitude', 'Latitude');
@@ -199,18 +199,32 @@ add_action('template_redirect', 'redirect_to_private_page');
 
 
 function add_barycenter_to_menu($items, $args) {
-
-    error_log('Checking if user has purchased the product...');
-
-
     if (has_user_purchased_product(get_current_user_id(), get_option('barycenter_product_id'))) {
         error_log('User has purchased the product. Adding to menu...');
         $barycenter_link = home_url('/app-barycentre/');
-        $items .= '<li><a href="' . esc_url($barycenter_link) . '">Barycentre</a></li>';
-    } else {
-        error_log('User has NOT purchased the product.');
+        $items .= '<li><a href="' . esc_url($barycenter_link) . '">App Barycentre</a></li>';
     }
     return $items;
 }
-add_filter('wp_nav_menu_items', 'add_barycenter_to_menu', 999, 2);
+add_filter('wp_nav_menu_items', 'add_barycenter_to_menu', 10, 2);
 
+// Ajout dans le menu Woocommerce
+
+function add_barycenter_link_to_account_menu($items) {
+    // Vérifiez si l'utilisateur est connecté et s'il a acheté le produit
+    if (is_user_logged_in() && has_user_purchased_product(get_current_user_id(), get_option('barycenter_product_id'))) {
+        // Ajoutez le lien vers le barycentre à la fin du menu
+        $items['app-barycentre'] = 'Barycentre';
+    }
+    return $items;
+}
+add_filter('woocommerce_account_menu_items', 'add_barycenter_link_to_account_menu');
+
+
+function redirect_barycenter_menu_item() {
+    if (is_account_page() && isset($_GET['app-barycentre'])) {
+        wp_redirect(home_url('/app-barycentre/'));
+        exit;
+    }
+}
+add_action('template_redirect', 'redirect_barycenter_menu_item');
