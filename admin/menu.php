@@ -196,3 +196,21 @@ function redirect_to_private_page() {
     }
 }
 add_action('template_redirect', 'redirect_to_private_page');
+
+
+function add_barycenter_to_menu($items, $args) {
+
+    error_log('Checking if user has purchased the product...');
+
+
+    if (has_user_purchased_product(get_current_user_id(), get_option('barycenter_product_id'))) {
+        error_log('User has purchased the product. Adding to menu...');
+        $barycenter_link = home_url('/app-barycentre/');
+        $items .= '<li><a href="' . esc_url($barycenter_link) . '">Barycentre</a></li>';
+    } else {
+        error_log('User has NOT purchased the product.');
+    }
+    return $items;
+}
+add_filter('wp_nav_menu_items', 'add_barycenter_to_menu', 999, 2);
+
