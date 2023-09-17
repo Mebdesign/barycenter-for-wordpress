@@ -245,16 +245,19 @@ class BarycenterCalculator {
         .then(response => response.json())
         .then(data => {
             this.barycenterMarker.bindPopup(data.display_name).openPopup();
+
             const exportButton = `<button id="exportToCSV">Exporter en CSV</button>`;
+
             const commentResult = `
                 <p style="margin:10px;">
                     Le barycentre est situé à la latitude <b>${this.barycenterMarker._latlng.lat.toFixed(6)}</b>
                     et à la longitude <b>${this.barycenterMarker._latlng.lng.toFixed(6)}</b>
                     et correspond à l'adresse : ${data.display_name}<br> <b>Nous pouvons vous aider à affiner votre recherche.</b>
-                </p> ${exportButton}`;
+                </p> ${barycenterParams.hasPurchased  ? exportButton : "Veuillez vous abonner"}`;
 
             jQuery('.active').nextAll().remove();
             jQuery('.active').after(commentResult);
+
 
             // Définir les en-têtes pour le CSV
             let headers = ["Index, Latitude, Longitude, Tonnage"];
@@ -337,6 +340,7 @@ class BarycenterCalculator {
 
 
 // Fonction pour télécharger le CSV
+
 function downloadCSV(csv, filename) {
     let csvFile;
     let downloadLink;
