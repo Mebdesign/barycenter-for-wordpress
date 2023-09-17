@@ -245,15 +245,46 @@ class BarycenterCalculator {
         .then(response => response.json())
         .then(data => {
             this.barycenterMarker.bindPopup(data.display_name).openPopup();
+            const exportButton = `<button id="exportToCSV">Exporter en CSV</button>`;
             const commentResult = `
                 <p style="margin:10px;">
                     Le barycentre est situé à la latitude <b>${this.barycenterMarker._latlng.lat.toFixed(6)}</b>
                     et à la longitude <b>${this.barycenterMarker._latlng.lng.toFixed(6)}</b>
                     et correspond à l'adresse : ${data.display_name}<br> <b>Nous pouvons vous aider à affiner votre recherche.</b>
-                </p>`;
+                </p> ${exportButton}`;
 
             jQuery('.active').nextAll().remove();
             jQuery('.active').after(commentResult);
+
+            // Définir les en-têtes pour le CSV
+            let headers = ["Index, Latitude, Longitude, Tonnage"];
+            let csv = [headers];
+
+            // Stockez une référence à barycenterMarker
+            let barycenterMarkerReference = this.barycenterMarker;
+
+            // Ajouter un écouteur d'événements pour le bouton d'exportation CSV
+            document.getElementById('exportToCSV').addEventListener('click', function() {
+                // Parcourir toutes les lignes du tableau
+                const rows = document.querySelectorAll('table tr');
+                rows.forEach(row => {
+                    let columns = row.querySelectorAll('td');
+                    let rowData = [];
+                    columns.forEach(column => rowData.push(column.innerText));
+                    // Vérifier que la ligne n'est pas une ligne de barycentre ou une ligne vide
+                    if (rowData[0] !== "Barycentre" && rowData.join(',').trim() !== "") { // Ne pas ajouter les lignes du barycentre ou les lignes vides
+                        csv.push(rowData.join(','));
+                    }
+                });
+
+                // Utilisez la référence stockée pour accéder à _latlng
+                const barycenter_coords = ["Barycentre", barycenterMarkerReference._latlng.lat.toFixed(6), barycenterMarkerReference._latlng.lng.toFixed(6), ""];
+                csv.push(barycenter_coords.join(","));
+
+                // Appeler la fonction pour télécharger le CSV
+                downloadCSV(csv.join('\n'), 'barycenter_data.csv');
+            });
+
 
         });
 
@@ -304,6 +335,25 @@ class BarycenterCalculator {
 
 } // Fin BarycenterCalculator class
 
+
+// Fonction pour télécharger le CSV
+function downloadCSV(csv, filename) {
+    let csvFile;
+    let downloadLink;
+
+    // Créer un nouveau Blob avec le contenu CSV
+    csvFile = new Blob([csv], {type: "text/csv"});
+
+    // Créer un lien de téléchargement pour le CSV
+    downloadLink = document.createElement("a");
+    downloadLink.download = filename;
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+    downloadLink.style.display = "none";
+
+    // Ajouter le lien au corps du document et cliquer dessus pour démarrer le téléchargement
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+}
 
 
 // Événement de focus sur une ligne du tableau .coordinates
