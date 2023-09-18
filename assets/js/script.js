@@ -5,7 +5,6 @@ class BarycenterCalculator {
         this.markers = []; // Liste des marqueurs ajoutés à la carte
         this.tonnes = []; // Liste des tonnes associées à chaque marqueur
         this.barycenterMarker = null; // Marqueur du barycentre
-        this.barycenterMarker = null; // Cercle représentant le barycentre
         // Définition de l'icône verte pour le marker
         let barycenterCalculator; // Déclaration globale
         this.markerClusterGroup = null; // Groupe de clustering pour les marqueurs
@@ -191,8 +190,6 @@ class BarycenterCalculator {
 
     }
 
-    // Méthode pour récupérer les tonnes saisies et calculer le barycentre
-
 
     // Méthode pour récupérer les tonnes saisies et calculer le barycentre
     getInputTonnage() {
@@ -202,7 +199,6 @@ class BarycenterCalculator {
             const tonnage = parseInt(input.value);
             this.tonnes.push(tonnage);
         });
-
 
 
         // Récupérez les markers et les tonnes ici
@@ -293,36 +289,6 @@ class BarycenterCalculator {
             jQuery('.active').after(commentResult);
 
 
-            // Définir les en-têtes pour le CSV
-            let headers = ["Index, Latitude, Longitude, Tonnage"];
-            let csv = [headers];
-
-            // Stockez une référence à barycenterMarker
-            let barycenterMarkerReference = this.barycenterMarker;
-
-            // Ajouter un écouteur d'événements pour le bouton d'exportation CSV
-            document.getElementById('exportToCSV').addEventListener('click', function() {
-                // Parcourir toutes les lignes du tableau
-                const rows = document.querySelectorAll('.subscribers table tr');
-                rows.forEach(row => {
-                    let columns = row.querySelectorAll('.subscribers td');
-                    let rowData = [];
-                    columns.forEach(column => rowData.push(column.innerText));
-                    // Vérifier que la ligne n'est pas une ligne de barycentre ou une ligne vide
-                    if (rowData[0] !== "Barycentre" && rowData.join(',').trim() !== "") { // Ne pas ajouter les lignes du barycentre ou les lignes vides
-                        csv.push(rowData.join(','));
-                    }
-                });
-
-                // Utilisez la référence stockée pour accéder à _latlng
-                const barycenter_coords = ["Barycentre", barycenterMarkerReference._latlng.lat.toFixed(6), barycenterMarkerReference._latlng.lng.toFixed(6), ""];
-                csv.push(barycenter_coords.join(","));
-
-                // Appeler la fonction pour télécharger le CSV
-                downloadCSV(csv.join('\n'), 'barycenter_data.csv');
-            });
-
-
         });
 
         if (!barycenterParams.hasPurchased && barycenterParams.enable_timer) {
@@ -407,6 +373,7 @@ function updateBarycenterHistory() {
                 // et mettez à jour le contenu de la div.
                 let historyHTML = buildHistoryTable(response.data);
                 jQuery('.subscribers').html(historyHTML);
+
             } else {
                 alert(response.data);
             }
@@ -491,6 +458,7 @@ jQuery(document).ready(function () {
     barycenterCalculator.initializeMap();
 
     // Écouteurs d'événements pour les boutons
+    jQuery(document).on('click', '#exportToCSV', exportUserHistoryToCsv);
     jQuery(document).on('click', '#btn-calculation', barycenterCalculator.getInputTonnage.bind(barycenterCalculator));
     jQuery(document).on('click', '.btn-reset', barycenterCalculator.reset);
     jQuery(document).on('click', '.btn-backHome', () => {
@@ -557,13 +525,36 @@ function setupDeleteHistoryEvent() {
     });
 }
 
+
+function exportUserHistoryToCsv() {
+    jQuery.ajax({
+        url: barycenterParams.ajax_url,
+        type: 'POST',
+        data: {
+            action: 'export_user_history',
+            user_id: barycenterParams.userId,
+            security: barycenterParams.security
+        },
+        success: function(response) {
+            console.log(response)
+            var parsedResponse = JSON.parse(response);
+            if (parsedResponse.success) {
+                downloadCSV(parsedResponse.data, 'user_history.csv');
+            } else {
+                alert('Erreur lors de l\'exportation des données.');
+            }
+        },
+        error: function() {
+            alert('Erreur lors de la demande d\'exportation.');
+        }
+    });
+}
+
+
 // Lancer la fonction dès que le DOM est prêt
 jQuery(document).ready(function($) {
     setupDeleteHistoryEvent();
 });
-
-
-
 
 // Écouteurs d'événements pour la modale et le formulaire de contact
 jQuery(document).on('click', '.close-modal, #contactModal', function(event) {
@@ -610,3 +601,5 @@ jQuery(document).on('submit', '#contactForm', function(e) {
 
     jQuery('#contactModal').css('display', 'none');
 });
+
+

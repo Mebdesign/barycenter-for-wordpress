@@ -84,6 +84,43 @@ function calculate_barycenter() {
     wp_send_json_success(['barycenter' => ['lat' => $barycenter]]);
 }
 
+function export_user_history() {
+    // Vérifiez la sécurité
+    check_ajax_referer('my-nonce', 'security');
+
+    // Obtenez l'ID utilisateur
+    $user_id = isset($_POST['user_id']) ? intval($_POST['user_id']) : 0;
+
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'barycenter_history';
+    $results = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table_name WHERE user_id = %d", $user_id), ARRAY_A);
+
+    // Convertir les résultats en CSV
+    $csv_output = "Date,Latitude,Longitude,Tonnage\n";
+
+    foreach ($results as $row) {
+        $date = $row['timestamp']; // Utilisez 'timestamp' comme date
+        $tonnage = $row['tonnage'];
+        $markers = unserialize($row['markers']); // Désérialisez les données
+
+        if (is_array($markers) && count($markers) > 0) {
+            foreach ($markers as $marker) {
+                $lat = $marker['lat'];
+                $lng = $marker['lng'];
+                $csv_output .= "{$date},{$lat},{$lng},{$tonnage}\n";
+                $date = ''; // Réinitialisez la date pour les lignes suivantes
+                $tonnage = ''; // Réinitialisez le tonnage pour les lignes suivantes
+            }
+        }
+    }
+
+    echo json_encode(array('success' => true, 'data' => $csv_output));
+    wp_die();
+}
+
+add_action('wp_ajax_export_user_history', 'export_user_history');
+
+
 // Ajoutez des actions AJAX pour les utilisateurs authentifiés et non authentifiés
 add_action('wp_ajax_process_contact_form', 'process_contact_form'); // Si l'utilisateur est connecté
 add_action('wp_ajax_nopriv_process_contact_form', 'process_contact_form'); // Si l'utilisateur n'est pas connecté

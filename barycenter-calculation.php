@@ -33,7 +33,8 @@ function barycenter_enqueue_scripts() {
         'limits' => get_option('barycenter_limits'),
         'option' =>  get_option('barycenter_color'),
         'ajax_url' => admin_url('admin-ajax.php'),
-        'security' => wp_create_nonce('my-nonce')
+        'security' => wp_create_nonce('my-nonce'),
+        'userId' => get_current_user_id()
     );
 
     wp_localize_script('barycenter-js', 'barycenterParams', $barycenter_params);
