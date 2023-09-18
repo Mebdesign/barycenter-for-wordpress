@@ -303,9 +303,9 @@ class BarycenterCalculator {
             // Ajouter un écouteur d'événements pour le bouton d'exportation CSV
             document.getElementById('exportToCSV').addEventListener('click', function() {
                 // Parcourir toutes les lignes du tableau
-                const rows = document.querySelectorAll('table tr');
+                const rows = document.querySelectorAll('.subscribers table tr');
                 rows.forEach(row => {
-                    let columns = row.querySelectorAll('td');
+                    let columns = row.querySelectorAll('.subscribers td');
                     let rowData = [];
                     columns.forEach(column => rowData.push(column.innerText));
                     // Vérifier que la ligne n'est pas une ligne de barycentre ou une ligne vide
@@ -325,7 +325,7 @@ class BarycenterCalculator {
 
         });
 
-        if (barycenterParams.enable_timer) {
+        if (!barycenterParams.hasPurchased && barycenterParams.enable_timer) {
             setTimeout(() => {
                 jQuery('#contactModal').css('display', 'flex');
             }, barycenterParams.timer || 5000);
@@ -430,7 +430,6 @@ function buildHistoryTable(history) {
 
     history.forEach(entry => {
         let markers = entry.markers; // Supposons que les markers sont déjà désérialisés
-        console.log(markers)
         let marker_list = '';
         markers.forEach(marker => {
             marker_list += `Lat: ${marker.lat}, Lng: ${marker.lng}<br>`;
@@ -442,7 +441,7 @@ function buildHistoryTable(history) {
             <td>${entry.timestamp}</td>
             <td>${marker_list}</td>
             <td>${barycenter}</td>
-            <td><button data-entry-id='${entry.id}' class='delete-history-entry'>Supprimer</button></td>
+            <td><button data-entry-id='${entry.id}' class='delete-history-entry barycenter-button barycenter-button-danger'>Supprimer</button></td>
         </tr>`;
     });
 
@@ -498,6 +497,7 @@ jQuery(document).ready(function () {
         const home = window.location.origin;
         location.replace(home);
     });
+
     var geocoder = L.Control.geocoder({
         geocoder: L.Control.Geocoder.nominatim(), // Utilisez Nominatim comme service de géocodage
         defaultMarkGeocode: false
@@ -525,14 +525,12 @@ jQuery(document).ready(function () {
         updateBarycenterHistory()
     }
 
-
 });
 
 
 //delete history
-
-jQuery(document).ready(function($) {
-    $('.delete-history-entry').on('click', function() {
+function setupDeleteHistoryEvent() {
+    $(document).on('click', '.delete-history-entry', function() {
         const entryId = $(this).data('entry-id');
 
         // Requête AJAX pour supprimer l'entrée d'historique.
@@ -557,7 +555,13 @@ jQuery(document).ready(function($) {
             }
         });
     });
+}
+
+// Lancer la fonction dès que le DOM est prêt
+jQuery(document).ready(function($) {
+    setupDeleteHistoryEvent();
 });
+
 
 
 
