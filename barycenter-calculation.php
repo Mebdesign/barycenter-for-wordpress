@@ -55,3 +55,7 @@ function enqueue_leaflet_geocoder() {
 }
 add_action('wp_enqueue_scripts', 'enqueue_leaflet_geocoder');
 
+function load_dashicons_front_end() {
+    wp_enqueue_style('dashicons');
+}
+add_action('wp_enqueue_scripts', 'load_dashicons_front_end');

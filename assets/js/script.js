@@ -8,8 +8,6 @@ class BarycenterCalculator {
         // Définition de l'icône verte pour le marker
         let barycenterCalculator; // Déclaration globale
         this.markerClusterGroup = null; // Groupe de clustering pour les marqueurs
-
-
     }
 
     // Méthode pour initialiser la carte
@@ -395,7 +393,7 @@ function buildHistoryTable(history) {
     }
 
     let output = '<table class="barycenter-history-table">';
-    output += '<thead><tr><th>Date</th><th>Latitude</th><th>Longitude</th><th>Tonnage</th><th>Barycenter Latitude</th><th>Barycenter Longitude</th><th>Action</th></tr></thead><tbody>';
+    output += '<h2>Mon historique de recherche</h2><thead><tr><th>Date</th><th>Latitude</th><th>Longitude</th><th>Tonnage</th><th>Barycenter Latitude</th><th>Barycenter Longitude</th><th>Action</th></tr></thead><tbody>';
 
     const exportButton = `<button class="barycenter-button barycenter-button-secondary" id="exportToCSV">Exporter en CSV</button>`;
 
@@ -405,7 +403,7 @@ function buildHistoryTable(history) {
 
         markers.forEach(marker => {
             if (firstRow) {
-                output += `<tr>
+                output += `<tr data-entry-id='${entry.id}'>
                     <td rowspan="${markers.length}">${entry.timestamp}</td>
                     <td>${marker.lat}</td>
                     <td>${marker.lng}</td>
@@ -416,7 +414,7 @@ function buildHistoryTable(history) {
                 </tr>`;
                 firstRow = false;
             } else {
-                output += `<tr>
+                output += `<tr data-entry-id='${entry.id}'>
                     <td>${marker.lat}</td>
                     <td>${marker.lng}</td>
                     <td>${marker.tonnage}</td>
@@ -425,7 +423,7 @@ function buildHistoryTable(history) {
         });
     });
 
-    output += `</tbody>${barycenterParams.hasPurchased ? exportButton : "Veuillez vous abonner"}</table>`;
+    output += `</tbody>${barycenterParams.hasPurchased ? exportButton : "Veuillez vous abonner"}<span class="close-modal">&times;</span></table>`;
 
     return output;
 }
@@ -509,11 +507,11 @@ jQuery(document).ready(function () {
 
 //delete history
 function setupDeleteHistoryEvent() {
-    $(document).on('click', '.delete-history-entry', function() {
-        const entryId = $(this).data('entry-id');
+    jQuery(document).on('click', '.delete-history-entry', function() {
+        const entryId = jQuery(this).data('entry-id');
 
         // Requête AJAX pour supprimer l'entrée d'historique.
-        $.ajax({
+        jQuery.ajax({
             url: barycenterParams.ajax_url,
             type: 'POST',
             data: {
@@ -523,8 +521,9 @@ function setupDeleteHistoryEvent() {
             },
             success: function(response) {
                 if (response.success) {
-                    // Supprimez la ligne du tableau.
-                    $(this).closest('tr').remove();
+                    // Supprimez la ligne du tableau en utilisant la variable temporaire
+                    jQuery('tr[data-entry-id="' + entryId + '"]').remove();
+
                 } else {
                     alert('Erreur lors de la suppression.');
                 }
@@ -534,6 +533,7 @@ function setupDeleteHistoryEvent() {
             }
         });
     });
+
 }
 
 
@@ -572,9 +572,14 @@ jQuery(document).on('click', '.close-modal, #contactModal', function(event) {
     // Si l'utilisateur a cliqué sur .close-modal ou en dehors de .modal-content
     if (jQuery(event.target).hasClass('close-modal') || jQuery(event.target).closest('.modal-content').length === 0) {
         jQuery('#contactModal').css('display', 'none');
+        jQuery('.subscribers').fadeOut();
     }
 });
+jQuery(document).on('click', '.open-modal', function(event) {
+    // Si l'utilisateur a cliqué sur .open-modal
+        jQuery('.subscribers').fadeIn();
 
+});
 
 jQuery(document).on('submit', '#contactForm', function(e) {
     e.preventDefault();

@@ -10,7 +10,7 @@ function barycenter_calculation_shortcode() {
             </div>
             <div class="card" id="result">
                 <div class="card-body">
-                    <h1>Calcul du barycentre</h1>
+                    <h1><span class="dashicons dashicons-backup open-modal pulse"></span> Calcul du barycentre</h1>
                     <hr>
                     <div class="step1">
                         <h2>Placer ses markers</h2>
