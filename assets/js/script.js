@@ -192,6 +192,9 @@ class BarycenterCalculator {
     }
 
     // Méthode pour récupérer les tonnes saisies et calculer le barycentre
+
+
+    // Méthode pour récupérer les tonnes saisies et calculer le barycentre
     getInputTonnage() {
         const tonnesInputs = jQuery('.coordinates input.tonnage');
         this.tonnes = [];
@@ -200,8 +203,41 @@ class BarycenterCalculator {
             this.tonnes.push(tonnage);
         });
 
-        this.calculateAndDisplayBarycenter();
+
+
+        // Récupérez les markers et les tonnes ici
+        let markersData = this.markers.map(marker => {
+            return { lat: marker.getLatLng().lat, lng: marker.getLatLng().lng };
+        });
+
+        // Requête AJAX pour calculer le barycentre
+        jQuery.ajax({
+            url: barycenterParams.ajax_url,
+            type: 'POST',
+            data: {
+                action: 'calculate_barycenter',
+                markers: markersData,
+                security: barycenterParams.security
+            },
+            success: (response) => {
+                if (response.success) {
+                    // Utilisez les données renvoyées pour afficher le barycentre
+                    const barycenter = response.data.barycenter;
+                    // Utilisez barycenter.lat et barycenter.lng pour afficher le barycentre sur la carte
+                    this.calculateAndDisplayBarycenter();
+                    if( barycenterParams.hasPurchased ){
+                        updateBarycenterHistory()
+                    }
+                } else {
+                    alert('Erreur lors du calcul du barycentre.');
+                }
+            },
+            error: function() {
+                alert('Erreur lors du calcul du barycentre.');
+            }
+        });
     }
+
 
     // Méthode pour calculer le barycentre
     calculateBarycenter() {
@@ -246,14 +282,12 @@ class BarycenterCalculator {
         .then(data => {
             this.barycenterMarker.bindPopup(data.display_name).openPopup();
 
-            const exportButton = `<button id="exportToCSV">Exporter en CSV</button>`;
-
             const commentResult = `
                 <p style="margin:10px;">
                     Le barycentre est situé à la latitude <b>${this.barycenterMarker._latlng.lat.toFixed(6)}</b>
                     et à la longitude <b>${this.barycenterMarker._latlng.lng.toFixed(6)}</b>
                     et correspond à l'adresse : ${data.display_name}<br> <b>Nous pouvons vous aider à affiner votre recherche.</b>
-                </p> ${barycenterParams.hasPurchased  ? exportButton : "Veuillez vous abonner"}`;
+                </p> `;
 
             jQuery('.active').nextAll().remove();
             jQuery('.active').after(commentResult);
@@ -359,6 +393,65 @@ function downloadCSV(csv, filename) {
     downloadLink.click();
 }
 
+function updateBarycenterHistory() {
+    jQuery.ajax({
+        url: barycenterParams.ajax_url,
+        type: 'POST',
+        data: {
+            action: 'get_barycenter_history',
+            security: barycenterParams.security
+        },
+        success: (response) => {
+            if (response.success) {
+                // Ici, construisez le tableau HTML à partir des données renvoyées
+                // et mettez à jour le contenu de la div.
+                let historyHTML = buildHistoryTable(response.data);
+                jQuery('.subscribers').html(historyHTML);
+            } else {
+                alert(response.data);
+            }
+        },
+        error: function() {
+            alert('Erreur lors de la récupération de l\'historique.');
+        }
+    });
+}
+
+function buildHistoryTable(history) {
+
+    if (!history || history.length === 0) {
+        return "Vous n'avez pas encore d'historique de recherche.";
+    }
+
+    let output = '<table class="barycenter-history-table">';
+    output += '<thead><tr><th>Date</th><th>Markers</th><th>Barycentre</th><th>Action</th></tr></thead><tbody>';
+
+    const exportButton = `<button id="exportToCSV">Exporter en CSV</button>`;
+
+    history.forEach(entry => {
+        let markers = entry.markers; // Supposons que les markers sont déjà désérialisés
+        console.log(markers)
+        let marker_list = '';
+        markers.forEach(marker => {
+            marker_list += `Lat: ${marker.lat}, Lng: ${marker.lng}<br>`;
+        });
+
+        let barycenter = `Lat: ${entry.barycenter_latitude}, Lng: ${entry.barycenter_longitude}`;
+
+        output += `<tr>
+            <td>${entry.timestamp}</td>
+            <td>${marker_list}</td>
+            <td>${barycenter}</td>
+            <td><button data-entry-id='${entry.id}' class='delete-history-entry'>Supprimer</button></td>
+        </tr>`;
+    });
+
+    output += `</tbody>${barycenterParams.hasPurchased  ? exportButton : "Veuillez vous abonner"}</table>`;
+
+    return output;
+}
+
+
 
 // Événement de focus sur une ligne du tableau .coordinates
 jQuery(document).on('click', '.coordinates tr', function() {
@@ -427,8 +520,46 @@ jQuery(document).ready(function () {
     })
     .addTo(barycenterCalculator.map);
 
+    // load history when document is ready
+    if( barycenterParams.hasPurchased ){
+        updateBarycenterHistory()
+    }
+
 
 });
+
+
+//delete history
+
+jQuery(document).ready(function($) {
+    $('.delete-history-entry').on('click', function() {
+        const entryId = $(this).data('entry-id');
+
+        // Requête AJAX pour supprimer l'entrée d'historique.
+        $.ajax({
+            url: barycenterParams.ajax_url,
+            type: 'POST',
+            data: {
+                action: 'delete_barycenter_history_entry',
+                entry_id: entryId,
+                security: barycenterParams.security
+            },
+            success: function(response) {
+                if (response.success) {
+                    // Supprimez la ligne du tableau.
+                    $(this).closest('tr').remove();
+                } else {
+                    alert('Erreur lors de la suppression.');
+                }
+            }.bind(this),
+            error: function() {
+                alert('Erreur lors de la suppression.');
+            }
+        });
+    });
+});
+
+
 
 // Écouteurs d'événements pour la modale et le formulaire de contact
 jQuery(document).on('click', '.close-modal, #contactModal', function(event) {
@@ -444,11 +575,11 @@ jQuery(document).on('submit', '#contactForm', function(e) {
 
     let formData = jQuery(this).serialize();
     formData += '&action=process_contact_form';
-    formData += '&security=' + barycenterParamsEmail.security;
+    formData += '&security=' + barycenterParams.security;
 
     jQuery.ajax({
         type: 'POST',
-        url: barycenterParamsEmail.ajax_url,
+        url: barycenterParams.ajax_url,
         data: formData,
         dataType: 'json',
         success: function(response) {

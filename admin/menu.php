@@ -119,29 +119,6 @@ function barycenter_render_email_field($field_name, $label) {
     <?php
 }
 
-
-function barycenter_enqueue_scripts() {
-    wp_enqueue_script('barycenter-js', plugins_url('../assets/js/script.js', __FILE__), array('jquery', 'osm-map-js', 'osm-cluster-map-js'), '1.0', false);
-
-    $barycenter_params = array(
-        'latitude' => (float) get_option('barycenter_latitude'),
-        'longitude' => (float) get_option('barycenter_longitude'),
-        'zoom' => get_option('barycenter_zoom'),
-        'product_id' => get_option('barycenter_product_id'),
-        'redirect_url' => get_option( 'barycenter_redirect_url'),
-        'hasPurchased' => has_user_purchased_product(get_current_user_id(), get_option('barycenter_product_id')),
-        'timer' => get_option('barycenter_timer'),
-        'enable_timer' => get_option('barycenter_enable_timer') === 'on' ? true : false,
-        'enable_cluster' => get_option('barycenter_enable_cluster') === 'on' ? true : false,
-        'limits' => get_option('barycenter_limits'),
-        'option' =>  get_option('barycenter_color')
-    );
-
-    wp_localize_script('barycenter-js', 'barycenterParams', $barycenter_params);
-}
-add_action('wp_enqueue_scripts', 'barycenter_enqueue_scripts');
-
-
 function barycenter_register_settings() {
     register_setting('barycenter_options', 'barycenter_latitude');
     register_setting('barycenter_options', 'barycenter_longitude');
