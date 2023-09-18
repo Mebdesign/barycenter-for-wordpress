@@ -135,7 +135,7 @@ class BarycenterCalculator {
             <td>${markerIndex}</td>
             <td>${lat}</td>
             <td>${lng}</td>
-            <td><input class="tonnage" type="text" value="" name="tonnage"></td>
+            <td><input id="tonnage" class="tonnage" type="number" value="" name="tonnage"></td>
         </tr>`;
 
         jQuery('.coordinates').append(row);
@@ -196,14 +196,17 @@ class BarycenterCalculator {
         const tonnesInputs = jQuery('.coordinates input.tonnage');
         this.tonnes = [];
         tonnesInputs.each((index, input) => {
-            const tonnage = parseInt(input.value);
-            this.tonnes.push(tonnage);
+            const tonnageValue = parseFloat(input.value);
+            if (isNaN(tonnageValue)) {
+                alert('Veuillez entrer un nombre valide pour le tonnage.');
+                return;
+            }
+            this.tonnes.push(tonnageValue);
         });
 
-
-        // Récupérez les markers et les tonnes ici
-        let markersData = this.markers.map(marker => {
-            return { lat: marker.getLatLng().lat, lng: marker.getLatLng().lng };
+        // Récupérez les markers ici
+        let markersData = this.markers.map((marker, index) => {
+            return { lat: marker.getLatLng().lat, lng: marker.getLatLng().lng, tonnage: this.tonnes[index]  };
         });
 
         // Requête AJAX pour calculer le barycentre
@@ -213,6 +216,7 @@ class BarycenterCalculator {
             data: {
                 action: 'calculate_barycenter',
                 markers: markersData,
+                tonnages: this.tonnes,
                 security: barycenterParams.security
             },
             success: (response) => {

@@ -55,6 +55,8 @@ function calculate_barycenter() {
     // Récupérez les données du formulaire
     $markers = isset($_POST['markers']) ? $_POST['markers'] : array();
 
+
+
     // Vérifiez si des marqueurs ont été fournis
     if (empty($markers)) {
         wp_send_json_error('Aucun marqueur fourni.');
@@ -77,7 +79,7 @@ function calculate_barycenter() {
     // Enregistrez le barycentre dans la base de données
     $user_id = get_current_user_id(); // Assurez-vous que l'utilisateur est connecté
     if ($user_id) {
-        add_barycenter_history($user_id, $markers, $barycenter_lat, $barycenter_lng);
+        add_barycenter_history($user_id, $markers, $barycenter_lat, $barycenter_lng );
     }
 
     // Renvoyez le barycentre
@@ -96,20 +98,26 @@ function export_user_history() {
     $results = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table_name WHERE user_id = %d", $user_id), ARRAY_A);
 
     // Convertir les résultats en CSV
-    $csv_output = "Date,Latitude,Longitude,Tonnage\n";
+    $csv_output = "Date,Latitude,Longitude,Tonnage,Barycenter Latitude,Barycenter Longitude\n";
 
     foreach ($results as $row) {
         $date = $row['timestamp']; // Utilisez 'timestamp' comme date
-        $tonnage = $row['tonnage'];
-        $markers = unserialize($row['markers']); // Désérialisez les données
+        $barycenter_lat = $row['barycenter_latitude'];
+        $barycenter_lng = $row['barycenter_longitude'];
+        $markers = maybe_unserialize($row['markers']); // Désérialisez les données
 
         if (is_array($markers) && count($markers) > 0) {
+            $firstMarker = true;
             foreach ($markers as $marker) {
                 $lat = $marker['lat'];
                 $lng = $marker['lng'];
-                $csv_output .= "{$date},{$lat},{$lng},{$tonnage}\n";
-                $date = ''; // Réinitialisez la date pour les lignes suivantes
-                $tonnage = ''; // Réinitialisez le tonnage pour les lignes suivantes
+                $tonnage = isset($marker['tonnage']) ? $marker['tonnage'] : '';
+                if ($firstMarker) {
+                    $csv_output .= "{$date},{$lat},{$lng},{$tonnage},{$barycenter_lat},{$barycenter_lng}\n";
+                    $firstMarker = false;
+                } else {
+                    $csv_output .= ",{$lat},{$lng},{$tonnage},,\n";
+                }
             }
         }
     }
@@ -117,6 +125,9 @@ function export_user_history() {
     echo json_encode(array('success' => true, 'data' => $csv_output));
     wp_die();
 }
+
+
+
 
 add_action('wp_ajax_export_user_history', 'export_user_history');
 
