@@ -3,43 +3,45 @@
 function barycenter_calculation_shortcode() {
     ob_start();
     ?>
-    <section class="grid">
-        <div id="mapid">
-            <input type="hidden" data-map-markers="" value="" name="map-geojson-data" />
-        </div>
-        <div class="card" id="result">
-            <div class="card-body">
-                <h1>Calcul du barycentre</h1>
-                <hr>
-                <div class="step1">
-                    <h2>Placer ses markers</h2>
-                    <p><b>Commencez par Placer 2 points au minimum"</b><br>Puis placez sur la carte, les marqueurs qui devront être desservis (points de vente, entrepôts, clients, fournisseurs etc.)
-                </div>
-                <div class="hidden">
-                    <h2>Saisir ses contraintes</h2>
-                    <p>Les contraintes correspondent au volume de marchandises.<br>
-                   Saisissez le volume acheminé.</p>
-                    <table class="table">
-                        <thead>
-                            <th>Marker</th>
-                            <th>Latitude</th>
-                            <th>Longitude</th>
-                            <th>Tonnage estimé</th>
-                        </thead>
-                        <tbody class="coordinates"></tbody>
-                    </table>
-                    <br>
-                    <button type="button" class="barycenter-button barycenter-button-primary" id="btn-calculation">Calculer le barycentre</button>
-                    <button type="button" class="barycenter-button barycenter-button-secondary btn-reset">Recommencer</button>
-                </div>
-                <hr>
+    <div id="app">
+        <section class="grid">
+            <div id="mapid">
+                <input type="hidden" data-map-markers="" value="" name="map-geojson-data" />
             </div>
-            <a class="copy" target="_blank" href="https://www.mebdesign.fr">&copy; Mebdesign.fr</a>
-        </div>
-    </section>
-    <section class="subscribers">
-        
-    </section>
+            <div class="card" id="result">
+                <div class="card-body">
+                    <h1>Calcul du barycentre</h1>
+                    <hr>
+                    <div class="step1">
+                        <h2>Placer ses markers</h2>
+                        <p><b>Commencez par Placer 2 points au minimum"</b><br>Puis placez sur la carte, les marqueurs qui devront être desservis (points de vente, entrepôts, clients, fournisseurs etc.)
+                    </div>
+                    <div class="hidden">
+                        <h2>Saisir ses contraintes</h2>
+                        <p>Les contraintes correspondent au volume de marchandises.<br>
+                       Saisissez le volume acheminé.</p>
+                        <table class="table">
+                            <thead>
+                                <th>Marker</th>
+                                <th>Latitude</th>
+                                <th>Longitude</th>
+                                <th>Tonnage estimé</th>
+                            </thead>
+                            <tbody class="coordinates"></tbody>
+                        </table>
+                        <br>
+                        <button type="button" class="barycenter-button barycenter-button-primary" id="btn-calculation">Calculer le barycentre</button>
+                        <button type="button" class="barycenter-button barycenter-button-secondary btn-reset">Recommencer</button>
+                    </div>
+                    <hr>
+                </div>
+                <a class="copy" target="_blank" href="https://www.mebdesign.fr">&copy; Mebdesign.fr</a>
+            </div>
+        </section>
+        <section class="subscribers">
+
+        </section>
+    </div>
 
     <!-- Modal -->
     <div class="custom-modal" id="contactModal">

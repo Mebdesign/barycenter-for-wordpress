@@ -397,7 +397,7 @@ function buildHistoryTable(history) {
     let output = '<table class="barycenter-history-table">';
     output += '<thead><tr><th>Date</th><th>Latitude</th><th>Longitude</th><th>Tonnage</th><th>Barycenter Latitude</th><th>Barycenter Longitude</th><th>Action</th></tr></thead><tbody>';
 
-    const exportButton = `<button id="exportToCSV">Exporter en CSV</button>`;
+    const exportButton = `<button class="barycenter-button barycenter-button-secondary" id="exportToCSV">Exporter en CSV</button>`;
 
     history.forEach(entry => {
         let markers = entry.markers; // Supposons que les markers sont déjà désérialisés
@@ -429,9 +429,6 @@ function buildHistoryTable(history) {
 
     return output;
 }
-
-
-
 
 // Événement de focus sur une ligne du tableau .coordinates
 jQuery(document).on('click', '.coordinates tr', function() {
