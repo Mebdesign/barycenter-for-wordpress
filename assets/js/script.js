@@ -395,31 +395,41 @@ function buildHistoryTable(history) {
     }
 
     let output = '<table class="barycenter-history-table">';
-    output += '<thead><tr><th>Date</th><th>Markers</th><th>Barycentre</th><th>Action</th></tr></thead><tbody>';
+    output += '<thead><tr><th>Date</th><th>Latitude</th><th>Longitude</th><th>Tonnage</th><th>Barycenter Latitude</th><th>Barycenter Longitude</th><th>Action</th></tr></thead><tbody>';
 
     const exportButton = `<button id="exportToCSV">Exporter en CSV</button>`;
 
     history.forEach(entry => {
         let markers = entry.markers; // Supposons que les markers sont déjà désérialisés
-        let marker_list = '';
+        let firstRow = true;
+
         markers.forEach(marker => {
-            marker_list += `Lat: ${marker.lat}, Lng: ${marker.lng}<br>`;
+            if (firstRow) {
+                output += `<tr>
+                    <td rowspan="${markers.length}">${entry.timestamp}</td>
+                    <td>${marker.lat}</td>
+                    <td>${marker.lng}</td>
+                    <td>${marker.tonnage}</td>
+                    <td rowspan="${markers.length}">${entry.barycenter_latitude}</td>
+                    <td rowspan="${markers.length}">${entry.barycenter_longitude}</td>
+                    <td rowspan="${markers.length}"><button data-entry-id='${entry.id}' class='delete-history-entry barycenter-button barycenter-button-danger'>Supprimer</button></td>
+                </tr>`;
+                firstRow = false;
+            } else {
+                output += `<tr>
+                    <td>${marker.lat}</td>
+                    <td>${marker.lng}</td>
+                    <td>${marker.tonnage}</td>
+                </tr>`;
+            }
         });
-
-        let barycenter = `Lat: ${entry.barycenter_latitude}, Lng: ${entry.barycenter_longitude}`;
-
-        output += `<tr>
-            <td>${entry.timestamp}</td>
-            <td>${marker_list}</td>
-            <td>${barycenter}</td>
-            <td><button data-entry-id='${entry.id}' class='delete-history-entry barycenter-button barycenter-button-danger'>Supprimer</button></td>
-        </tr>`;
     });
 
-    output += `</tbody>${barycenterParams.hasPurchased  ? exportButton : "Veuillez vous abonner"}</table>`;
+    output += `</tbody>${barycenterParams.hasPurchased ? exportButton : "Veuillez vous abonner"}</table>`;
 
     return output;
 }
+
 
 
 
