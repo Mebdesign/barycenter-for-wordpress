@@ -221,9 +221,9 @@ class BarycenterCalculator {
                 security: barycenterParams.security
             },
             success: (response) => {
+                // Dans le callback de succès de votre requête AJAX
+                jQuery(".spinner").removeClass("is-active");
                 if (response.success) {
-                    // Dans le callback de succès de votre requête AJAX
-                    jQuery(".spinner").removeClass("is-active");
                     // Utilisez les données renvoyées pour afficher le barycentre
                     const barycenter = response.data.barycenter;
                     // Utilisez barycenter.lat et barycenter.lng pour afficher le barycentre sur la carte
@@ -380,8 +380,8 @@ function updateBarycenterHistory() {
             security: barycenterParams.security
         },
         success: (response) => {
+            jQuery(".spinner").removeClass("is-active");
             if (response.success) {
-                jQuery(".spinner").removeClass("is-active");
                 // Ici, construisez le tableau HTML à partir des données renvoyées
                 // et mettez à jour le contenu de la div.
                 let historyHTML = buildHistoryTable(response.data);
@@ -532,8 +532,8 @@ function setupDeleteHistoryEvent() {
                 security: barycenterParams.security
             },
             success: function(response) {
+                jQuery(".spinner").removeClass("is-active");
                 if (response.success) {
-                    jQuery(".spinner").removeClass("is-active");
                     // Supprimez la ligne du tableau en utilisant la variable temporaire
                     jQuery('tr[data-entry-id="' + entryId + '"]').remove();
 
@@ -611,8 +611,8 @@ jQuery(document).on('submit', '#contactForm', function(e) {
         data: formData,
         dataType: 'json',
         success: function(response) {
+            jQuery(".spinner").removeClass("is-active");
             if (response.success) {
-                jQuery(".spinner").removeClass("is-active");
                 alert(response.data.message);
             } else {
                 alert('Erreur : ' + response.data.message);
