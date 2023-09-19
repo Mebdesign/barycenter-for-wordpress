@@ -41,7 +41,7 @@ function barycenter_calculation_shortcode() {
             </div>
         </section>
         <section class="subscribers">
-
+        <span class="close-modal">&times;</span>
         </section>
     </div>
 
@@ -86,6 +86,8 @@ function barycenter_calculation_shortcode() {
             </div>
         </div>
     </div>
+    <span class="spinner"></span>
+
 
     <?php
 

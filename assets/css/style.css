@@ -18,14 +18,44 @@
 
 .dashicons:hover {
     cursor: pointer;
-
-
 }
 
 .dashicons:before {
     font-size: 36px;
     color: #f2b100;
 }
+
+.spinner.is-active {
+    visibility: visible;
+    position: fixed; /* Positionnement fixe par rapport à la fenêtre */
+    top: 50%; /* Centré verticalement */
+    left: 50%; /* Centré horizontalement */
+    transform: translate(-50%, -50%); /* Ajustement pour un centrage parfait */
+    z-index: 9999; /* z-index élevé pour qu'il apparaisse au-dessus de tout */
+    float: none;
+    display: inline-block;
+}
+
+.spinner.is-active:before {
+    content: '\f463'; /* Ceci est le code Unicode pour l'icône spinner dans Dashicons */
+    display: block;
+    animation: rotation .7s infinite linear;
+    font: 400 20px/1 dashicons;
+    speak: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(359deg);
+    }
+}
+
+
 
 h1{
     font-size: 2rem !important;

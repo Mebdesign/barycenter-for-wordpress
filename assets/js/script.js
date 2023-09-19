@@ -207,6 +207,9 @@ class BarycenterCalculator {
             return { lat: marker.getLatLng().lat, lng: marker.getLatLng().lng, tonnage: this.tonnes[index]  };
         });
 
+        // Avant de commencer la requête AJAX
+        jQuery(".spinner").addClass("is-active");
+
         // Requête AJAX pour calculer le barycentre
         jQuery.ajax({
             url: barycenterParams.ajax_url,
@@ -219,6 +222,8 @@ class BarycenterCalculator {
             },
             success: (response) => {
                 if (response.success) {
+                    // Dans le callback de succès de votre requête AJAX
+                    jQuery(".spinner").removeClass("is-active");
                     // Utilisez les données renvoyées pour afficher le barycentre
                     const barycenter = response.data.barycenter;
                     // Utilisez barycenter.lat et barycenter.lng pour afficher le barycentre sur la carte
@@ -232,6 +237,9 @@ class BarycenterCalculator {
             },
             error: function() {
                 alert('Erreur lors du calcul du barycentre.');
+                // Et aussi dans le callback d'erreur de votre requête AJAX
+                jQuery(".spinner").removeClass("is-active");
+
             }
         });
     }
@@ -362,6 +370,8 @@ function downloadCSV(csv, filename) {
 }
 
 function updateBarycenterHistory() {
+    // Avant de commencer la requête AJAX
+    jQuery(".spinner").addClass("is-active");
     jQuery.ajax({
         url: barycenterParams.ajax_url,
         type: 'POST',
@@ -371,6 +381,7 @@ function updateBarycenterHistory() {
         },
         success: (response) => {
             if (response.success) {
+                jQuery(".spinner").removeClass("is-active");
                 // Ici, construisez le tableau HTML à partir des données renvoyées
                 // et mettez à jour le contenu de la div.
                 let historyHTML = buildHistoryTable(response.data);
@@ -381,6 +392,7 @@ function updateBarycenterHistory() {
             }
         },
         error: function() {
+            jQuery(".spinner").removeClass("is-active");
             alert('Erreur lors de la récupération de l\'historique.');
         }
     });
@@ -509,7 +521,7 @@ jQuery(document).ready(function () {
 function setupDeleteHistoryEvent() {
     jQuery(document).on('click', '.delete-history-entry', function() {
         const entryId = jQuery(this).data('entry-id');
-
+        jQuery(".spinner").addClass("is-active");
         // Requête AJAX pour supprimer l'entrée d'historique.
         jQuery.ajax({
             url: barycenterParams.ajax_url,
@@ -521,6 +533,7 @@ function setupDeleteHistoryEvent() {
             },
             success: function(response) {
                 if (response.success) {
+                    jQuery(".spinner").removeClass("is-active");
                     // Supprimez la ligne du tableau en utilisant la variable temporaire
                     jQuery('tr[data-entry-id="' + entryId + '"]').remove();
 
@@ -529,6 +542,7 @@ function setupDeleteHistoryEvent() {
                 }
             }.bind(this),
             error: function() {
+                jQuery(".spinner").removeClass("is-active");
                 alert('Erreur lors de la suppression.');
             }
         });
@@ -538,6 +552,7 @@ function setupDeleteHistoryEvent() {
 
 
 function exportUserHistoryToCsv() {
+    jQuery(".spinner").addClass("is-active");
     jQuery.ajax({
         url: barycenterParams.ajax_url,
         type: 'POST',
@@ -547,7 +562,7 @@ function exportUserHistoryToCsv() {
             security: barycenterParams.security
         },
         success: function(response) {
-            console.log(response)
+            jQuery(".spinner").removeClass("is-active");
             var parsedResponse = JSON.parse(response);
             if (parsedResponse.success) {
                 downloadCSV(parsedResponse.data, 'user_history.csv');
@@ -556,6 +571,7 @@ function exportUserHistoryToCsv() {
             }
         },
         error: function() {
+            jQuery(".spinner").removeClass("is-active");
             alert('Erreur lors de la demande d\'exportation.');
         }
     });
@@ -587,6 +603,7 @@ jQuery(document).on('submit', '#contactForm', function(e) {
     let formData = jQuery(this).serialize();
     formData += '&action=process_contact_form';
     formData += '&security=' + barycenterParams.security;
+    jQuery(".spinner").addClass("is-active");
 
     jQuery.ajax({
         type: 'POST',
@@ -595,12 +612,14 @@ jQuery(document).on('submit', '#contactForm', function(e) {
         dataType: 'json',
         success: function(response) {
             if (response.success) {
+                jQuery(".spinner").removeClass("is-active");
                 alert(response.data.message);
             } else {
                 alert('Erreur : ' + response.data.message);
             }
         },
         error: function() {
+            jQuery(".spinner").removeClass("is-active");
             alert('Erreur lors de l\'envoi du formulaire. Veuillez réessayer.');
         }
     });
