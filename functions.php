@@ -138,32 +138,6 @@ add_action('wp_ajax_nopriv_process_contact_form', 'process_contact_form'); // Si
 add_action('wp_ajax_calculate_barycenter', 'calculate_barycenter');
 add_action('wp_ajax_nopriv_calculate_barycenter', 'calculate_barycenter');
 
-
-// Cette fonction crée une nouvelle table dans la base de données lors de l'activation du plugin.
-function create_barycenter_history_table() {
-    global $wpdb; // Accéder à la variable globale $wpdb pour interagir avec la base de données.
-    $charset_collate = $wpdb->get_charset_collate();
-    $table_name = $wpdb->prefix . 'barycenter_history'; // Nom de la table avec le préfixe WordPress.
-
-    // SQL pour créer la table.
-    $sql = "CREATE TABLE $table_name (
-        id mediumint(9) NOT NULL AUTO_INCREMENT, -- ID unique pour chaque entrée.
-        user_id mediumint(9) NOT NULL, -- ID de l'utilisateur.
-        markers text NOT NULL, -- Markers sous forme de texte (sérialisé).
-        barycenter_lat float(10, 6) NOT NULL, -- Latitude du barycentre.
-        barycenter_lng float(10, 6) NOT NULL, -- Longitude du barycentre.
-        timestamp datetime DEFAULT '0000-00-00 00:00:00' NOT NULL, -- Date et heure de la recherche.
-        PRIMARY KEY  (id)
-    ) $charset_collate;";
-
-    // Inclure le fichier upgrade.php pour utiliser la fonction dbDelta.
-    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-    dbDelta($sql); // Exécuter la requête SQL.
-}
-
-// Exécuter la fonction lors de l'activation du plugin.
-register_activation_hook(__FILE__, 'create_barycenter_history_table');
-
 // Cette fonction ajoute une nouvelle entrée à la table d'historique.
 function add_barycenter_history($user_id, $markers, $barycenter_lat, $barycenter_lng) {
     global $wpdb; // Accéder à la variable globale $wpdb.

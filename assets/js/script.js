@@ -69,7 +69,7 @@ class BarycenterCalculator {
             var limit = (typeof barycenterParams.limits !== 'undefined' && !isNaN(parseInt(barycenterParams.limits, 10))) ? parseInt(barycenterParams.limits, 10) : 3;
 
             if (!barycenterParams.hasPurchased  && barycenterCalculator.markers.length >= limit){
-                alert("Vous avez atteint la limite de marqueurs pour la version gratuite. Veuillez vous abboner au produit pour ajouter des marqueurs à l'infini.");
+                alert("Vous avez atteint la limite de marqueurs pour la version gratuite. Veuillez vous abonner au produit pour ajouter des marqueurs à l'infini.");
                 return;
 
             } else {
