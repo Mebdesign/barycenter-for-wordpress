@@ -57,12 +57,14 @@
 
 h1{
     font-size: 2rem !important;
-    color:#222222 !important
+    color:#222222 !important;
+    margin-top:1em;
 }
 
 h2 {
     font-size: 1.5rem !important;
     color:#555555 !important;
+    margin-top:1em;
 }
 
 h1,h2,h3 {
