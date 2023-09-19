@@ -41,7 +41,6 @@
     display: block;
     animation: rotation .7s infinite linear;
     font: 400 20px/1 dashicons;
-    speak: none;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
