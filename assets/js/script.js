@@ -386,6 +386,8 @@ function updateBarycenterHistory() {
                 // et mettez à jour le contenu de la div.
                 let historyHTML = buildHistoryTable(response.data);
                 jQuery('.subscribers').html(historyHTML);
+                // Si vous souhaitez colorer les lignes après avoir ajouté l'historique à la table
+                colorAlternateRows();
 
             } else {
                 alert(response.data);
@@ -399,7 +401,6 @@ function updateBarycenterHistory() {
 }
 
 function buildHistoryTable(history) {
-
     if (!history || history.length === 0) {
         return "Vous n'avez pas encore d'historique de recherche.";
     }
@@ -439,6 +440,23 @@ function buildHistoryTable(history) {
 
     return output;
 }
+
+function colorAlternateRows() {
+    let currentEntryId = null;
+    let currentColor = 'white';  // couleur initiale
+
+    jQuery('.barycenter-history-table tbody tr').each(function() {
+        const rowEntryId = jQuery(this).data('entry-id');
+
+        if (currentEntryId !== rowEntryId) {
+            currentEntryId = rowEntryId;
+            currentColor = (currentColor === 'white') ? '#f2f2f2' : 'white';  // alterner la couleur
+        }
+
+        jQuery(this).css('background-color', currentColor);
+    });
+}
+
 
 // Événement de focus sur une ligne du tableau .coordinates
 jQuery(document).on('click', '.coordinates tr', function() {

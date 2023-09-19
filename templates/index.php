@@ -41,6 +41,7 @@ function barycenter_calculation_shortcode() {
             </div>
         </section>
         <section class="subscribers">
+            <h2 style="text-align:center;">Vous n'avez pas encore d'historique de recherche</h2>
         <span class="close-modal">&times;</span>
         </section>
     </div>

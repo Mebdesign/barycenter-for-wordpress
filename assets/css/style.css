@@ -9,6 +9,7 @@
     z-index: 1000;
     width: 100%;
     height:100vh;
+    padding:0 1em;
 }
 
 .dashicons {
@@ -230,6 +231,15 @@ p .barycenter-button {
     -webkit-box-shadow: inset 0 1px 0 rgba(0,0,0,0.1);
     box-shadow: inset 0 1px 0 rgba(0,0,0,0.1);
     vertical-align: top;
+}
+
+
+.color-group-1 {
+    background-color: #f2f2f2;
+}
+
+.color-group-2 {
+    background-color: #e6e6e6;
 }
 
 
