@@ -71,8 +71,8 @@ function create_barycenter_history_table() {
         id mediumint(9) NOT NULL AUTO_INCREMENT, -- ID unique pour chaque entrée.
         user_id mediumint(9) NOT NULL, -- ID de l'utilisateur.
         markers text NOT NULL, -- Markers sous forme de texte (sérialisé).
-        barycenter_lat float(10, 6) NOT NULL, -- Latitude du barycentre.
-        barycenter_lng float(10, 6) NOT NULL, -- Longitude du barycentre.
+        barycenter_latitude float(10, 6) NOT NULL, -- Latitude du barycentre.
+        barycenter_longitude float(10, 6) NOT NULL, -- Longitude du barycentre.
         timestamp datetime DEFAULT '0000-00-00 00:00:00' NOT NULL, -- Date et heure de la recherche.
         PRIMARY KEY  (id)
     ) $charset_collate;";

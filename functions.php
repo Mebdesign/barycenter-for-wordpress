@@ -55,8 +55,6 @@ function calculate_barycenter() {
     // Récupérez les données du formulaire
     $markers = isset($_POST['markers']) ? $_POST['markers'] : array();
 
-
-
     // Vérifiez si des marqueurs ont été fournis
     if (empty($markers)) {
         wp_send_json_error('Aucun marqueur fourni.');
@@ -126,11 +124,7 @@ function export_user_history() {
     wp_die();
 }
 
-
-
-
 add_action('wp_ajax_export_user_history', 'export_user_history');
-
 
 // Ajoutez des actions AJAX pour les utilisateurs authentifiés et non authentifiés
 add_action('wp_ajax_process_contact_form', 'process_contact_form'); // Si l'utilisateur est connecté
@@ -190,7 +184,6 @@ function ajax_get_barycenter_history() {
     wp_send_json_success($history);
 }
 add_action('wp_ajax_get_barycenter_history', 'ajax_get_barycenter_history');
-
 
 
 function delete_barycenter_history_entry() {
