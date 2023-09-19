@@ -1,6 +1,8 @@
 <?php
 
 function barycenter_calculation_shortcode() {
+    $user_id = get_current_user_id();
+    $product_id = get_option('barycenter_product_id');
     ob_start();
     ?>
     <div id="app">
@@ -10,7 +12,7 @@ function barycenter_calculation_shortcode() {
             </div>
             <div class="card" id="result">
                 <div class="card-body">
-                    <h1><span class="dashicons dashicons-backup open-modal pulse"></span> Calcul du barycentre</h1>
+                    <h1><?php echo has_user_purchased_product($user_id, $product_id) ? '<span class="dashicons dashicons-backup open-modal pulse"></span>' : ''; ?> Calcul du barycentre</h1>
                     <hr>
                     <div class="step1">
                         <h2>Placer ses markers</h2>
