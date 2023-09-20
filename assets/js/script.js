@@ -129,10 +129,11 @@ class BarycenterCalculator {
 
         const markerIndex = this.markers.indexOf(marker);
 
-        const row = `<tr>
+        const row = `<tr data-marker-id="${markerIndex}">
             <td>${markerIndex}</td>
             <td>${lat}</td>
             <td>${lng}</td>
+            <td><span class="dashicons dashicons-trash delete-marker"></span></td>
             <td><input id="tonnage" class="tonnage" type="number" value="" name="tonnage"></td>
         </tr>`;
 
@@ -496,7 +497,27 @@ jQuery(document).ready(function () {
 
     barycenterCalculator.initializeMap();
 
-    // Écouteurs d'événements pour les boutons
+    jQuery(document).on('click', '.delete-marker', function() {
+        const markerIndex = jQuery(this).closest('tr').data('marker-id');
+        const tempMarker = this.markers[markerIndex];
+
+        // Supprimer le marqueur du cluster
+        if(barycenterParams.enable_cluster) {
+            this.markerClusterGroup.removeLayer(tempMarker);
+        }
+
+        // Suppression du marqueur de la carte et du tableau des marqueurs
+        this.map.removeLayer(tempMarker);
+        this.markers.splice(markerIndex, 1);
+
+        // Suppression de la ligne correspondante dans le tableau des coordonnées
+        jQuery('.coordinates tr').eq(markerIndex + 1).remove(); // +1 car l'index 0 est l'en-tête du tableau
+
+        // Mise à jour des marqueurs restants et du tableau
+        this.updateMarkersAndTable();
+    });
+
+
     jQuery(document).on('click', '#exportToCSV', exportUserHistoryToCsv);
     jQuery(document).on('click', '#btn-calculation', barycenterCalculator.getInputTonnage.bind(barycenterCalculator));
     jQuery(document).on('click', '.btn-reset', barycenterCalculator.reset);

@@ -58,13 +58,13 @@
 h1{
     font-size: 2rem !important;
     color:#222222 !important;
-    margin-top:1em;
+    margin-top:1em !important;
 }
 
 h2 {
     font-size: 1.5rem !important;
     color:#555555 !important;
-    margin-top:1em;
+    margin-top:1em !important;
 }
 
 h1,h2,h3 {
@@ -289,10 +289,11 @@ p .barycenter-button {
 /*
 Label the data
 */
-.active td:nth-of-type(1):before { content: "Marker :"; }
-.active td:nth-of-type(2):before { content: "Latitude :"; }
-.active td:nth-of-type(3):before { content: "Longitude: "; }
-.active td:nth-of-type(4):before { content: "Contrainte (Volume) :"; }
+.active td:nth-of-type(4):before { content: "Action :"; }
+.active td:nth-of-type(2):before { content: "Marker :"; }
+.active td:nth-of-type(3):before { content: "Latitude :"; }
+.active td:nth-of-type(1):before { content: "Longitude: "; }
+.active td:nth-of-type(5):before { content: "Contrainte (Volume) :"; }
 
 
 @media (max-width: 990px){

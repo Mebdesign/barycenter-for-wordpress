@@ -28,6 +28,7 @@ function barycenter_calculation_shortcode() {
                                 <th>Latitude</th>
                                 <th>Longitude</th>
                                 <th>Tonnage estimé</th>
+                                <th>Action</th>
                             </thead>
                             <tbody class="coordinates"></tbody>
                         </table>
